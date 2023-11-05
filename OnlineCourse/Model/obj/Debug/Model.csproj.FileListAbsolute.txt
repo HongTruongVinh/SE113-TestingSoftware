@@ -94,3 +94,19 @@ C:\Users\HONG VINH\OneDrive\Desktop\New folder\OnlineCoursev3\OnlineCourse\Model
 C:\Users\HONG VINH\OneDrive\Desktop\New folder\OnlineCoursev3\OnlineCourse\Model\obj\Debug\Model.csproj.CopyComplete
 C:\Users\HONG VINH\OneDrive\Desktop\New folder\OnlineCoursev3\OnlineCourse\Model\obj\Debug\Model.dll
 C:\Users\HONG VINH\OneDrive\Desktop\New folder\OnlineCoursev3\OnlineCourse\Model\obj\Debug\Model.pdb
+D:\KTPM_T4\SE113-TestingSoftware\OnlineCourse\Model\bin\Debug\Model.dll.config
+D:\KTPM_T4\SE113-TestingSoftware\OnlineCourse\Model\bin\Debug\Model.dll
+D:\KTPM_T4\SE113-TestingSoftware\OnlineCourse\Model\bin\Debug\Model.pdb
+D:\KTPM_T4\SE113-TestingSoftware\OnlineCourse\Model\bin\Debug\EntityFramework.dll
+D:\KTPM_T4\SE113-TestingSoftware\OnlineCourse\Model\bin\Debug\EntityFramework.SqlServer.dll
+D:\KTPM_T4\SE113-TestingSoftware\OnlineCourse\Model\bin\Debug\PagedList.dll
+D:\KTPM_T4\SE113-TestingSoftware\OnlineCourse\Model\bin\Debug\PagedList.Mvc.dll
+D:\KTPM_T4\SE113-TestingSoftware\OnlineCourse\Model\bin\Debug\EntityFramework.xml
+D:\KTPM_T4\SE113-TestingSoftware\OnlineCourse\Model\bin\Debug\EntityFramework.SqlServer.xml
+D:\KTPM_T4\SE113-TestingSoftware\OnlineCourse\Model\bin\Debug\PagedList.xml
+D:\KTPM_T4\SE113-TestingSoftware\OnlineCourse\Model\bin\Debug\PagedList.Mvc.xml
+D:\KTPM_T4\SE113-TestingSoftware\OnlineCourse\Model\obj\Debug\Model.csproj.AssemblyReference.cache
+D:\KTPM_T4\SE113-TestingSoftware\OnlineCourse\Model\obj\Debug\Model.csproj.CoreCompileInputs.cache
+D:\KTPM_T4\SE113-TestingSoftware\OnlineCourse\Model\obj\Debug\Model.csproj.CopyComplete
+D:\KTPM_T4\SE113-TestingSoftware\OnlineCourse\Model\obj\Debug\Model.dll
+D:\KTPM_T4\SE113-TestingSoftware\OnlineCourse\Model\obj\Debug\Model.pdb
