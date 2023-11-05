@@ -3,6 +3,7 @@ using Model.Models;
 using OnlineCourse.Common;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -11,7 +12,7 @@ namespace OnlineCourse.Controllers
 {
     public class ProductController : BaseController
     {
-        public const int ITEMS_PER_PAGE = 12;
+        public const int ITEMS_PER_PAGE = 120;
         public int currentPage { get; set; }
         public int countPages { get; set; }
 
@@ -21,8 +22,6 @@ namespace OnlineCourse.Controllers
         }
         public ActionResult Category(string searchString, long cateId)
         {
-            //currentPage = page;
-            //Product/https%3a/localhost%3a44323/khoa-hoc/tat-ca-0-trang-?p=2
 
             countPages = (int)Math.Ceiling((double)new ProductDao().CountByCategoryID(searchString, cateId) / ITEMS_PER_PAGE);
 
@@ -46,14 +45,14 @@ namespace OnlineCourse.Controllers
             return View(model);
         }
 
-        public ActionResult Detail(long id, long detailid)
+        public ActionResult Detaill(long id, long detailid)
         {
             var product = new ProductDao().ViewDetail(id);
             ViewBag.CategoryID = new ProductCategoryDao().ListAll();
 
             var sessionUser = (UserLogin)Session[CommonConstants.USER_SESSION];
             ViewBag.UserID = sessionUser.UserID;
-            ViewBag.ListComment = new CommentDao().ListCommentViewModel(0,id);
+            ViewBag.ListComment = new CommentDao().ListCommentViewModel(0, id);
 
             ViewBag.DetailID = detailid.ToString();
 
@@ -62,6 +61,36 @@ namespace OnlineCourse.Controllers
 
             return View(product);
         }
+
+        public ActionResult Detail(int productId, int playingIdVideo)
+        {
+            var product = new ProductDao().ViewDetail(productId);
+            ViewBag.CategoryID = new ProductCategoryDao().ListAll();
+
+            var sessionUser = (UserLogin)Session[CommonConstants.USER_SESSION];
+            ViewBag.UserID = sessionUser.UserID;
+            ViewBag.ListComment = new CommentDao().ListCommentViewModel(0, productId);
+
+            ViewBag.isProductOfUserSession = new ProductDao().IsProductOfUserSession(productId, (int)sessionUser.UserID);
+
+            int createrID = (int)Convert.ToDouble(product.CreateBy);
+            ViewBag.CreatedBy = new ProductDao().GetCreatedByUser(createrID);
+
+            List<CourseVideo> productVideos = new CourseVideoDao().GetListVideoInfor(productId);
+            ViewBag.productVideos = productVideos;
+
+            ViewBag.productDocuments = new CourseDocumentDao().GetListDocumentInfor(productId);
+
+            if (playingIdVideo == -1 && productVideos.Count > 0)
+            {
+                playingIdVideo = new CourseVideoDao().GetListVideoInfor(productId).OrderByDescending(o => o.DateUpdate).ToList().FirstOrDefault().ID;
+            }
+
+            ViewBag.playingVideo = new CourseVideoDao().GetVideo(playingIdVideo);
+
+            return View(product);
+        }
+
         [ChildActionOnly]
         public ActionResult _ChildComment(long parentid, long productid)
         {
@@ -71,7 +100,7 @@ namespace OnlineCourse.Controllers
             {
                 data[k].UserID = sessionuser.UserID;
             }
-            return PartialView("~/Views/Shared/_ChildComment.cshtml",data);
+            return PartialView("~/Views/Shared/_ChildComment.cshtml", data);
         }
         [HttpPost]
         public JsonResult AddNewComment(long productid, long userid, long parentid, string commentmsg, string rate)
@@ -114,8 +143,39 @@ namespace OnlineCourse.Controllers
         }
         public ActionResult GetComment(long productid)
         {
-            var data = new CommentDao().ListCommentViewModel(0,productid);
+            var data = new CommentDao().ListCommentViewModel(0, productid);
             return PartialView("~/Views/Shared/_ChildComment.cshtml", data);
+        }
+
+        public FileResult LearnerDownloadDocument(string link)
+        {
+            //var memory = new MemoryStream();
+            //using (var stream = new FileStream(link, FileMode.Open))
+            //{
+            //    stream.CopyTo(memory);
+            //}
+            //memory.Position = 0;
+
+            string ext = Path.GetExtension(link).ToLowerInvariant();
+            return File(link, GetMimeTypes()[ext]);
+        }
+
+        private Dictionary<string, string> GetMimeTypes()
+        {
+            return new Dictionary<string, string>
+            {
+                {".txt", "text/plain"},
+                {".pdf", "application/pdf"},
+                {".doc", "application/vnd.ms-word"},
+                {".docx", "application/vnd.ms-word"},
+                {".xls", "application/vnd.ms-excel"},
+                {".xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"},
+                {".png", "image/png"},
+                {".jpg", "image/jpeg"},
+                {".jpeg", "image/jpeg"},
+                {".gif", "image/gif"},
+                {".csv", "text/csv"}
+            };
         }
     }
 }

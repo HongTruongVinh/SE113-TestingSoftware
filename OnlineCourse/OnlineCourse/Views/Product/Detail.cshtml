@@ -12,30 +12,15 @@
 
     var TitleDetail = Model.Name;
 
-    string[] arrListType = Model.ListType.Split(',');
-    string[] arrListFile = Model.ListFile.Split('*');
-
-    if (Convert.ToInt16(ViewBag.DetailID) > 0 && Convert.ToInt16(ViewBag.DetailID) <= arrListType.Length)
-    {
-        if (arrListType[Convert.ToInt16(ViewBag.DetailID) - 1].ToString() == "0")
-        {
-            detailid = "/Data/files/khoahoc/" + Model.Code + "_" + ViewBag.DetailID + ".mp4";
-            detailid360 = "/Data/files/khoahoc/360_" + Model.Code + "_" + ViewBag.DetailID + ".mp4";
-            detailid1080 = "/Data/files/khoahoc/1080_" + Model.Code + "_" + ViewBag.DetailID + ".mp4";
-
-            TitleDetail = arrListFile[Convert.ToInt16(ViewBag.DetailID) - 1].ToString();
-        }
-        else
-        {
-            detailid = "/Data/files/khoahoc/" + Model.Code + "_" + ViewBag.DetailID + ".pdf";
-            TitleDetail = arrListFile[Convert.ToInt16(ViewBag.DetailID) - 1].ToString();
-        }
-    }
     ViewBag.Title = TitleDetail;
-    var videocount = 0;
 
     var ownUser = (Model.Models.User)ViewBag.CreatedBy;
     var usersession = (OnlineCourse.Common.UserLogin)HttpContext.Current.Session[OnlineCourse.Common.CommonConstants.USER_SESSION];
+    bool isProductOfUserSession = (bool)ViewBag.isProductOfUserSession;
+
+    var productVideos = (List<Model.Models.CourseVideo>)ViewBag.productVideos;
+    var productDocuments = (List<Model.Models.CourseDocument>)ViewBag.productDocuments;
+    var playingVideo = (Model.Models.CourseVideo)ViewBag.playingVideo;
 }
 @section Childcss
 {
@@ -61,7 +46,7 @@
         <div class="row g-3">
             <!-- Course video START -->
             <div class="col-12">
-                @if (detailid.ToString().Contains(".pdf"))
+                <!--if (detailid.ToString().Contains(".pdf"))
                 {
                     <div style="border: 1px solid blue;text-align:center;" id="myDiv" tabindex="0">
                         <canvas id="the-canvas" style="text-align: center"></canvas>
@@ -83,9 +68,36 @@
                 {
                     <div class="video-player rounded-3">
                         <video controls crossorigin="anonymous" playsinline poster="">
+                            <source src="detailid360" type="video/mp4" size="360">
+                            <source src="detailid" type="video/mp4" size="720">
+                            <source src="detailid1080" type="video/mp4" size="1080">-->
+                <!-- Caption files -->
+                <!--<track kind="captions" label="English" srclang="en" src="/assets/client/images/videos/en.vtt" default>
+                            <track kind="captions" label="French" srclang="fr" src="/assets/client/images/videos/fr.vtt">
+                        </video>
+                    </div>
+                }-->
+
+                @if (playingVideo != null)
+                {
+                    <div class="video-player rounded-3">
+                        <video controls crossorigin="anonymous" playsinline poster="">
+                            <source src="@playingVideo.Link" type="video/mp4" size="360">
+                            <source src="@playingVideo.Link" type="video/mp4" size="720">
+                            <source src="@playingVideo.Link" type="video/mp4" size="1080">-->
+                            <!-- Caption files -->
+                            <track kind="captions" label="English" srclang="en" src="/assets/client/images/videos/en.vtt" default>
+                            <track kind="captions" label="French" srclang="fr" src="/assets/client/images/videos/fr.vtt">
+                        </video>
+                    </div>
+                }
+                else
+                {
+                    <div class="video-player rounded-3">
+                        <video controls crossorigin="anonymous" playsinline poster="">
                             <source src="@detailid360" type="video/mp4" size="360">
                             <source src="@detailid" type="video/mp4" size="720">
-                            <source src="@detailid1080" type="video/mp4" size="1080">
+                            <source src="@detailid1080" type="video/mp4" size="1080">-->
                             <!-- Caption files -->
                             <track kind="captions" label="English" srclang="en" src="/assets/client/images/videos/en.vtt" default>
                             <track kind="captions" label="French" srclang="fr" src="/assets/client/images/videos/fr.vtt">
@@ -163,27 +175,31 @@ Page content START -->
                                                 <li><a class="dropdown-item" href="#"><i class="fas fa-copy me-2"></i>Copy link</a></li>
                                             </ul>
                                         </div>
-                                        
-                                        if (!usersession.WishListIdProduct.Keys.Contains(Model.ID.ToString()))
-                                        {
-                            <div class="dropdown ms-2">
 
-                                @Ajax.ActionLink(" Thêm vào giỏ",
-                                         "AddProductToCart",
-                                         "User",
-                                         new { productId = Model.ID, userId = usersession.UserID },
-                                         new AjaxOptions
-                                         {
-                                             HttpMethod = "GET",
-                                             InsertionMode = InsertionMode.Replace,
-                                             UpdateTargetId = "dialog_window_id",
-                                             OnComplete = "$(this).hide();"
-                                         },
-                                         new { @class = "btn btn-sm mb-0 btn-warning-soft small fas bi bi-cart" }
-                                         )
-                            </div>
+                                        if (usersession.WishListIdProduct.Keys.Contains(Model.ID.ToString()) || isProductOfUserSession == true)
+                                        {
+
                                         }
-                                        
+                                        else
+                                        {
+                                            <div class="dropdown ms-2">
+
+                                                @Ajax.ActionLink(" Thêm vào giỏ",
+                                                         "AddProductToCart",
+                                                         "Profile",
+                                                         new { productId = Model.ID, userId = usersession.UserID },
+                                                         new AjaxOptions
+                                                         {
+                                                             HttpMethod = "GET",
+                                                             InsertionMode = InsertionMode.Replace,
+                                                             UpdateTargetId = "dialog_window_id",
+                                                             OnComplete = "$(this).hide();"
+                                                         },
+                                                         new { @class = "btn btn-sm mb-0 btn-warning-soft small fas bi bi-cart" }
+                                                         )
+                                            </div>
+                                        }
+
                                     }
                                 }
                             </div>
@@ -357,7 +373,7 @@ Page content START -->
                                                 <div class="d-md-flex my-4">
                                                     <!-- Avatar -->
                                                     <div class="avatar avatar-xl me-4 flex-shrink-0">
-                                                        <img class="avatar-img rounded-circle" src="/assets/client/images/avatar/09.jpg" alt="avatar" width="40">
+                                                        <img class="avatar-img rounded-circle" src="@itemcomment.LinkAvatar" alt="avatar" width="40">
                                                     </div>
                                                     <!-- Text -->
                                                     <div class="col-md-12">
@@ -412,9 +428,10 @@ Page content START -->
                                                             <div class="bg-white"></div>
                                                             <div class="d-flex flex-row">
                                                                 <a class="accordion-collapse collapse show" href="#commmentreply-@itemcomment.ID" data-bs-toggle="collapse" aria-expanded="true" aria-controls="collapse-1">
-                                                                <i class="fas fa-reply me-2"></i>Reply</a>
+                                                                    <i class="fas fa-reply me-2"></i>Reply
+                                                                </a>
                                                             </div>
-                                                           
+
                                                         </div>
                                                         <div id="commmentreply-@itemcomment.ID" class="bg-light p-2 collapse">
                                                             <div class="d-flex flex-row align-items-start">
@@ -430,11 +447,11 @@ Page content START -->
                                                         </div>
 
                                                         <!-- Reply button -->
-                                                     
+
                                                         @{Html.RenderAction("_ChildComment", "Product", new { parentid = itemcomment.ID, productid = itemcomment.ProductID });}
                                                     </div>
-                                                   
-                                                </div>                                                                                            
+
+                                                </div>
                                             </div>
                                         }
                                     }
@@ -535,97 +552,90 @@ Page content START -->
                                         <!-- Item -->
                                         <div class="accordion-item mb-3">
                                             <h6 class="accordion-header font-base" id="heading-1">
-                                                @for (int i = 0; i < arrListFile.Length; i++)
-                                                {
-                                                    if (arrListType[i].ToString() == "0")
-                                                    {
-                                                        videocount++;
-                                                    }
-                                                }
+
                                                 <a class="accordion-button fw-bold rounded collapsed d-block" href="#collapse-1" data-bs-toggle="collapse" data-bs-target="#collapse-1" aria-expanded="true" aria-controls="collapse-1">
                                                     <span class="mb-0">Nội dung khóa học(Video)</span>
-                                                    <span class="small d-block mt-1">(@videocount Video)</span>
+                                                    <span class="small d-block mt-1">(@productVideos.Count Video)</span>
                                                 </a>
                                             </h6>
                                             <div id="collapse-1" class="accordion-collapse collapse show" aria-labelledby="heading-1" data-bs-parent="#accordionExample2">
                                                 <div class="accordion-body mt-3">
                                                     <div class="vstack gap-3">
-                                                        @for (int i = 0; i < arrListFile.Length; i++)
-                                                        {
-                                                            if (arrListType[i].ToString() == "0")
+
+                                                        @{
+                                                            var isBoughtProduct = usersession.WishListIdProduct.Where(x => x.Key == Model.ID.ToString() && x.Value == true).SingleOrDefault();
+
+
+                                                            //Nếu chưa mua khóa học này thì sẽ disable link đến các video khác
+                                                            if (isBoughtProduct.Value == true || isProductOfUserSession == true)
                                                             {
-                                                                var j = i + 1;
-
-
-                                                                var isBoughtProduct = usersession.WishListIdProduct.Where(x => x.Key == Model.ID.ToString() && x.Value == true).SingleOrDefault();
-
-
-                                                                //Nếu chưa mua khóa học này thì sẽ disable link đến các video khác
-                                                                if (isBoughtProduct.Value == false)
+                                                                foreach (var video in productVideos)
                                                                 {
-                                                                    if (j == 1)
+                                                                    if (video.ID == playingVideo.ID)
                                                                     {
-
                                                                         <div class="p-2 bg-success bg-opacity-10 rounded-3">
                                                                             <div class="d-flex justify-content-between align-items-center">
                                                                                 <div class="position-relative d-flex align-items-center">
-                                                                                    <a href="/chi-tiet/@Model.MetaTitle-@Model.ID-@j" class="btn btn-success btn-round btn-sm mb-0 stretched-link position-static">
+                                                                                    <a href="@Url.Action("Detail", "Product" , new { productId = Model.ID, playingIdVideo = playingVideo.ID })" class="btn btn-success btn-round btn-sm mb-0 stretched-link position-static">
                                                                                         <i class="fas fa-play me-0"></i>
                                                                                     </a>
-                                                                                    <span class="d-inline-block text-truncate ms-2 mb-0 h6 fw-light w-200px">@arrListFile[i].ToString()</span>
+                                                                                    <span class="d-inline-block text-truncate ms-2 mb-0 h6 fw-light w-200px">@video.Title</span>
+                                                                                </div>
+                                                                                <p class="mb-0 text-truncate">Playing</p>
+                                                                            </div>
+                                                                        </div>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <div class="d-flex justify-content-between align-items-center">
+                                                                            <div class="position-relative d-flex align-items-center">
+                                                                                <a href="@Url.Action("Detail", "Product" , new { productId = Model.ID, playingIdVideo = video.ID })" class="btn btn-danger-soft btn-round btn-sm mb-0 stretched-link position-static">
+                                                                                    <i class="fas fa-play me-0"></i>
+                                                                                </a>
+                                                                                <span class="d-inline-block text-truncate ms-2 mb-0 h6 fw-light w-200px">@video.Title</span>
+                                                                            </div>
+                                                                            <p class="mb-0 text-truncate">20m 10s</p>
+                                                                        </div>
+                                                                    }
+                                                                }
+                                                            }
+                                                            else
+                                                            {
+                                                                int indexVideo = 0;
+                                                                foreach (var video in productVideos)
+                                                                {
+                                                                    if (indexVideo == 0)
+                                                                    {
+                                                                        <div class="p-2 bg-success bg-opacity-10 rounded-3">
+                                                                            <div class="d-flex justify-content-between align-items-center">
+                                                                                <div class="position-relative d-flex align-items-center">
+                                                                                    <a href="@Url.Action("Detail", "Product" , new { productId = Model.ID, playingIdVideo = playingVideo.ID })" class="btn btn-success btn-round btn-sm mb-0 stretched-link position-static">
+                                                                                        <i class="fas fa-play me-0"></i>
+                                                                                    </a>
+                                                                                    <span class="d-inline-block text-truncate ms-2 mb-0 h6 fw-light w-200px">@video.Title</span>
                                                                                 </div>
                                                                                 <p class="mb-0 text-truncate">Playing</p>
                                                                             </div>
                                                                         </div>
 
+                                                                        indexVideo++;
                                                                     }
                                                                     else
                                                                     {
                                                                         <div class="d-flex justify-content-between align-items-center">
                                                                             <div class="position-relative d-flex align-items-center">
                                                                                 <i class="fas bi bi-cart me-0 btn btn-warning-soft btn-round btn-sm disabled" style="max-width: 150%; max-height: 150%"></i>
-                                                                                <span class="d-inline-block text-truncate ms-2 mb-0 h6 fw-light w-200px">@arrListFile[i].ToString()</span>
+                                                                                <span class="d-inline-block text-truncate ms-2 mb-0 h6 fw-light w-200px">@video.Title</span>
                                                                             </div>
-                                                                            <p class="mb-0 text-truncate">2m 10s</p>
+                                                                            <p class="mb-0 text-truncate">20m 10s</p>
                                                                         </div>
                                                                     }
                                                                 }
-                                                                else
-                                                                {
-                                                                    if (j.ToString() == ViewBag.DetailID)
-                                                                    {
-
-                                                                        <div class="p-2 bg-success bg-opacity-10 rounded-3">
-                                                                            <div class="d-flex justify-content-between align-items-center">
-                                                                                <div class="position-relative d-flex align-items-center">
-                                                                                    <a href="/chi-tiet/@Model.MetaTitle-@Model.ID-@j" class="btn btn-success btn-round btn-sm mb-0 stretched-link position-static">
-                                                                                        <i class="fas fa-play me-0"></i>
-                                                                                    </a>
-                                                                                    <span class="d-inline-block text-truncate ms-2 mb-0 h6 fw-light w-200px">@arrListFile[i].ToString()</span>
-                                                                                </div>
-                                                                                <p class="mb-0 text-truncate">Playing</p>
-                                                                            </div>
-                                                                        </div>
-
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        <div class="d-flex justify-content-between align-items-center">
-                                                                            <div class="position-relative d-flex align-items-center">
-                                                                                <a href="/chi-tiet/@Model.MetaTitle-@Model.ID-@j" class="btn btn-danger-soft btn-round btn-sm mb-0 stretched-link position-static">
-                                                                                    <i class="fas fa-play me-0"></i>
-                                                                                </a>
-                                                                                <span class="d-inline-block text-truncate ms-2 mb-0 h6 fw-light w-200px">@arrListFile[i].ToString()</span>
-                                                                            </div>
-                                                                            <p class="mb-0 text-truncate">2m 10s</p>
-                                                                        </div>
-                                                                    }
-                                                                }
-
-
                                                             }
 
+
                                                         }
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -636,7 +646,7 @@ Page content START -->
                                             <h6 class="accordion-header font-base" id="heading-2">
                                                 <a class="accordion-button fw-bold collapsed rounded d-block" href="#collapse-2" data-bs-toggle="collapse" data-bs-target="#collapse-2" aria-expanded="false" aria-controls="collapse-2">
                                                     <span class="mb-0">Tài liệu (PDF)</span>
-                                                    <span class="small d-block mt-1">(@(@arrListType.Length - @videocount) tài liệu)</span>
+                                                    <span class="small d-block mt-1">(@(productDocuments.Count) tài liệu)</span>
                                                 </a>
                                             </h6>
                                             <div id="collapse-2" class="accordion-collapse collapse" aria-labelledby="heading-2" data-bs-parent="#accordionExample2">
@@ -644,42 +654,19 @@ Page content START -->
                                                 <div class="accordion-body mt-3">
                                                     <div class="vstack gap-3">
 
-                                                        @for (int i = 0; i < arrListFile.Length; i++)
+                                                        @foreach (var document in productDocuments)
                                                         {
-                                                            if (arrListType[i].ToString() == "1")
-                                                            {
-                                                                var j = i + 1;
-                                                                if (j.ToString() == ViewBag.DetailID)
-                                                                {
-
-                                                                    <div class="p-2 bg-success bg-opacity-10 rounded-3">
-                                                                        <div class="d-flex justify-content-between align-items-center">
-                                                                            <div class="position-relative d-flex align-items-center">
-                                                                                <a href="/chi-tiet/@Model.MetaTitle-@Model.ID-@j" class="btn btn-success btn-round btn-sm mb-0 stretched-link position-static">
-                                                                                    <i class="fas fa-play me-0"></i>
-                                                                                </a>
-                                                                                <span class="d-inline-block text-truncate ms-2 mb-0 h6 fw-light w-200px">@arrListFile[i].ToString()</span>
-                                                                            </div>
-                                                                            <p class="mb-0 text-truncate">Playing</p>
-                                                                        </div>
-                                                                    </div>
-
-                                                                }
-                                                                else
-                                                                {
-                                                                    <div class="d-flex justify-content-between align-items-center">
-                                                                        <div class="position-relative d-flex align-items-center">
-                                                                            <a href="/chi-tiet/@Model.MetaTitle-@Model.ID-@j" class="btn btn-danger-soft btn-round btn-sm mb-0 stretched-link position-static">
-                                                                                <i class="fas fa-play me-0"></i>
-                                                                            </a>
-                                                                            <span class="d-inline-block text-truncate ms-2 mb-0 h6 fw-light w-200px">@arrListFile[i].ToString()</span>
-                                                                        </div>
-                                                                        <p class="mb-0 text-truncate">2m 10s</p>
-                                                                    </div>
-                                                                }
-                                                            }
-
+                                                            <div class="d-flex justify-content-between align-items-center">
+                                                                <div class="position-relative d-flex align-items-center">
+                                                                    <a href="@Url.Action("LearnerDownloadDocument", "Product", new { link = document.Link })" class="btn btn-info-soft btn-round btn-sm mb-0 stretched-link position-static">
+                                                                        <i class="fas fa-download me-0"></i>
+                                                                    </a>
+                                                                    <span class="d-inline-block text-truncate ms-2 mb-0 h6 fw-light w-200px">@document.Name</span>
+                                                                </div>
+                                                                <p class="mb-0 text-truncate">free</p>
+                                                            </div>
                                                         }
+
                                                     </div>
                                                 </div>
                                                 <!-- Accordion body END -->

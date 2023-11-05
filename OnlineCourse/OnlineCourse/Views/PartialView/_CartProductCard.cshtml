@@ -16,11 +16,11 @@
                 <div class="row p-2 bg-white border rounded mt-2" id="@product.ID">
                     <div class="col-md-3 mt-1"><img class="img-fluid img-responsive rounded product-image" src="@product.Image"></div>
                     <div class="col-md-6 mt-1">
-                        <h5 ><a href="@url">@product.Name</a></h5>
+                        <h5><a href="@url">@product.Name</a></h5>
                         <div class="d-flex flex-row">
                             <div class="ratings mr-2">
                                 @{
-                                    var r = new Random().Next(1,5);
+                                    var r = new Random().Next(1, 5);
                                     for (int start = 1; start <= r; start++)
                                     {
                                         <i class="fa fa-star text-warning"></i>
@@ -36,20 +36,20 @@
 
                     <div class="align-items-center align-content-center col-md-3 border-left mt-1">
                         <div class="d-flex flex-row align-items-center">
-                            <h4 class="mr-1">@String.Format("{0:#,##0.##}", product.Price) VND</h4><span class="strike-text">$20.99</span>
+                            <h4 class="mr-1">@String.Format("{0:#,##0.##}", product.Price) VND</h4>
                         </div>
-                        <h6 class="text-success">Có chứng chỉ</h6>
+                        
                         <div class="d-flex flex-column mt-4">
                             @Html.ActionLink("Mua", // <-- Link text
                                             "BuyProduct", // <-- Action Method Name
-                                            "User",
+                                            "Profile",
                                              new { productId = product.ID, userId = Model.UserID }, // <-- Route value
                                              new { @class = "btn btn-primary btn-sm" } // <-- htmlArguments
                                             )
 
                             @Ajax.ActionLink("Xóa",
                                         "DeleteProduct",
-                                        "User",
+                                        "Profile",
                                         new { productId = product.ID, userId = Model.UserID },
                                         new AjaxOptions
                                         {
@@ -69,5 +69,7 @@
         </div>
     </div>
 </div>
+
+<hr />
 
 

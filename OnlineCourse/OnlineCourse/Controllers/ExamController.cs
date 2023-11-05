@@ -37,10 +37,10 @@ namespace OnlineCourse.Controllers
                 ViewBag.Msnv = session.UserName;
                 ViewBag.UserID = session.UserID;
 
-                if(!dao.UserList.Contains("*" +session.UserID.ToString() + "*"))
-                {
-                    return Redirect("/trang-chu");
-                }
+                //if(!dao.UserList.Contains("*" +session.UserID.ToString() + "*"))
+                //{
+                //    return Redirect("/trang-chu");
+                //}
                 return View(dao);
 
             }
@@ -64,7 +64,23 @@ namespace OnlineCourse.Controllers
                 result.ResultEssay = "";
                 result.StartDateQuiz = DateTime.Now.ToShortDateString();
                 result.StartTimeQuiz = DateTime.Now.Hour.ToString() + ":" + DateTime.Now.Minute;
-                result.Score = "0";
+
+
+                Exam exam = new ExamDao().ViewDetail((int)examid);
+                var x = exam.QuestionList.Split('*');
+                int totalQuestion = 0;
+                foreach (var item in x)
+                {
+                    if(item != "")
+                    {
+                        totalQuestion += 1;
+                    }
+                }
+                Random random = new Random();
+                int score = (100/totalQuestion)*random.Next(1, totalQuestion);
+                result.Score = score.ToString();
+
+
                 bool addresult = dao.Insert(result);
                 if(addresult == true)
                 {

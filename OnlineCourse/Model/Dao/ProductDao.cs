@@ -27,6 +27,19 @@ namespace Model.Dao
             }
             return model.OrderByDescending(x => x.CreateDate).ToPagedList(page, pagesize);
         }
+
+        public bool IsProductOfUserSession(int productId, int userId)
+        {
+            
+            Product product = DataProvider.Ins.DB.Products.Where(x => x.ID == productId).SingleOrDefault();
+
+            if (product != null && int.Parse(product.CreateBy) == userId)
+            {
+                return true;
+            }
+            else { return false; }
+        }
+
         public bool Delete(int id)
         {
             try
@@ -151,12 +164,17 @@ namespace Model.Dao
             return DataProvider.Ins.DB.Comments.Where(x => x.ProductID == productId).ToList().Count();
         }
 
+        public int GetCountLearner(long productId)
+        {
+            return DataProvider.Ins.DB.WishProducts.Where(x => x.ProductID == productId).ToList().Count();
+        }
+
         public bool BuyProduct(int userId, int productId)
         {
             bool result = false;
             try
             {
-                DataProvider.Ins.DB.OwnProducts.Where(x => x.idProduct == productId && x.idUser == userId).SingleOrDefault().IsBought = true;
+                DataProvider.Ins.DB.WishProducts.Where(x => x.ProductID == productId && x.UserID == userId).SingleOrDefault().IsBought = true;
                 DataProvider.Ins.DB.SaveChanges();
                 return true;
             }
@@ -170,8 +188,8 @@ namespace Model.Dao
         {
             try
             {
-                OwnProduct ownProduct = new OwnProduct() { idProduct = productId, idUser = userId, IsBought = false };
-                DataProvider.Ins.DB.OwnProducts.Add(ownProduct);
+                WishProduct wishProduct = new WishProduct() { ProductID = productId, UserID = userId, IsBought = false };
+                DataProvider.Ins.DB.WishProducts.Add(wishProduct);
                 DataProvider.Ins.DB.SaveChanges();
                 return true;
             }
@@ -185,9 +203,9 @@ namespace Model.Dao
         {
             try
             {
-                OwnProduct ownProduct = DataProvider.Ins.DB.OwnProducts.Where(x =>  x.idProduct == productId && x.idUser == userId).SingleOrDefault();
-                DataProvider.Ins.DB.OwnProducts.Remove(ownProduct);
-                DataProvider.Ins.DB.SaveChanges();
+                WishProduct wishProduct = DataProvider.Ins.DB.WishProducts.Where(x =>  x.ProductID == productId && x.UserID == userId).SingleOrDefault();
+                DataProvider.Ins.DB.WishProducts.Remove(wishProduct);
+                DataProvider.Ins.DB.SaveChanges();  
                 return true;
             }
             catch
@@ -201,15 +219,15 @@ namespace Model.Dao
         public Dictionary<string, bool> GetWishListProduct(int userId)
         {
             Dictionary<string, bool> lisId = new Dictionary<string, bool>();
-            foreach (var ownProduct in DataProvider.Ins.DB.OwnProducts.Where(x => x.idUser == userId))
+            foreach (var item in DataProvider.Ins.DB.WishProducts.Where(x => x.UserID == userId))
             {
-                if (ownProduct.IsBought == true)
+                if (item.IsBought == true)
                 {
-                    lisId.Add(ownProduct.idProduct.ToString(), true);
+                    lisId.Add(item.ProductID.ToString(), true);
                 }
                 else
                 {
-                    lisId.Add(ownProduct.idProduct.ToString(), false);
+                    lisId.Add(item.ProductID.ToString(), false);
                 }
             }
             return lisId;

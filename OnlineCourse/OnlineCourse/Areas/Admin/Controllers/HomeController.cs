@@ -1,4 +1,5 @@
-﻿using OnlineCourse.App_Start;
+﻿using Model.Dao;
+using OnlineCourse.App_Start;
 using OnlineCourse.Common;
 using System;
 using System.Collections.Generic;
@@ -18,6 +19,8 @@ namespace OnlineCourse.Areas.Admin.Controllers
 
         public ActionResult Index()
         {
+            ViewBag.HomeInfor = new GetInforDao().GetHomeDashboardInfor();
+
             return View();
         }
 

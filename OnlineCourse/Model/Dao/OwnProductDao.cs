@@ -7,21 +7,21 @@ using System.Threading.Tasks;
 
 namespace Model.Dao
 {
-    public class OwnProductDao
+    public class WishProductDao
     {
-        public OwnProductDao() { }
+        public WishProductDao() { }
 
-        public List<Product> GetListOwnProduct(long userId)
+        public List<Product> GetListWishProduct(long userId)
         {
             List<Product> products = new List<Product>();
 
-            List<OwnProduct> ownProducts = new List<OwnProduct>();
+            List<WishProduct> wishProduct = new List<WishProduct>();
 
-            ownProducts = DataProvider.Ins.DB.OwnProducts.Where(x => x.idUser == userId && x.IsBought == true).ToList();
+            wishProduct = DataProvider.Ins.DB.WishProducts.Where(x => x.UserID == userId && x.IsBought == true).ToList();
 
-            foreach (var item in ownProducts)
+            foreach (var item in wishProduct)
             {
-                Product p = DataProvider.Ins.DB.Products.Where(x => x.ID == item.idProduct).SingleOrDefault();
+                Product p = DataProvider.Ins.DB.Products.Where(x => x.ID == item.ProductID).SingleOrDefault();
                 if (p != null)
                 {
                     products.Add(p);
@@ -35,13 +35,13 @@ namespace Model.Dao
         {
             List<Product> products = new List<Product>();
 
-            List<OwnProduct> cartProducts = new List<OwnProduct>();
+            List<WishProduct> cartProducts = new List<WishProduct>();
 
-            cartProducts = DataProvider.Ins.DB.OwnProducts.Where(x => x.idUser == userId && x.IsBought == false).ToList();
+            cartProducts = DataProvider.Ins.DB.WishProducts.Where(x => x.UserID == userId && x.IsBought == false).ToList();
 
             foreach (var item in cartProducts)
             {
-                Product p = DataProvider.Ins.DB.Products.Where(x => x.ID == item.idProduct).SingleOrDefault();
+                Product p = DataProvider.Ins.DB.Products.Where(x => x.ID == item.ProductID).SingleOrDefault();
                 if (p != null)
                 {
                     products.Add(p);

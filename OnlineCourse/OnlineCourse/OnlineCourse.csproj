@@ -187,12 +187,15 @@
     <Compile Include="Areas\Admin\Controllers\UserController.cs" />
     <Compile Include="Areas\Admin\Models\LoginModel.cs" />
     <Compile Include="Common\CommonConstants.cs" />
+    <Compile Include="Common\ConvertLanguage.cs" />
     <Compile Include="Common\Encryptor.cs" />
     <Compile Include="Common\UserLogin.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\ExamController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ManagementCourseController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
+    <Compile Include="Controllers\ProfileController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -1516,6 +1519,7 @@
     <Content Include="assets\client\images\courses\4by3\20.jpg" />
     <Content Include="assets\client\images\courses\4by3\21.jpg" />
     <Content Include="assets\client\images\courses\4by3\22.jpg" />
+    <Content Include="assets\client\images\courses\IconExam.png" />
     <Content Include="assets\client\images\element\01.png" />
     <Content Include="assets\client\images\element\01.svg" />
     <Content Include="assets\client\images\element\02.png" />
@@ -2198,20 +2202,35 @@
     <Content Include="Views\Exam\Category.cshtml" />
     <Content Include="Views\Exam\Detail.cshtml" />
     <Content Include="Views\Product\Category.cshtml" />
-    <Content Include="Views\Product\Detail.cshtml" />
+    <Content Include="Views\Product\Detaill.cshtml" />
     <Content Include="Views\Shared\_ChildComment.cshtml" />
     <Content Include="Views\Shared\_LayoutExam.cshtml" />
     <Content Include="Views\User\Login.cshtml" />
-    <Content Include="Views\PartialView\CourseCard.cshtml" />
+    <Content Include="Views\PartialView\CourseCardd.cshtml" />
     <Content Include="Views\PartialView\ExamCard.cshtml" />
     <Content Include="Views\Shared\_Paging.cshtml" />
     <Content Include="Views\User\ProfileUser.cshtml" />
     <Content Include="Views\PartialView\_CartProductCard.cshtml" />
     <Content Include="Views\PartialView\_BoughtProductCard.cshtml" />
-    <Content Include="Views\Product\Study.cshtml" />
+    <Content Include="Views\Product\Detail.cshtml" />
+    <Content Include="Views\Shared\_LayoutProfile.cshtml" />
+    <Content Include="Views\Profile\Index.cshtml" />
+    <Content Include="Views\Profile\AcademicAchievement.cshtml" />
+    <Content Include="Views\Profile\CourseBought.cshtml" />
+    <Content Include="Views\Profile\Cart.cshtml" />
+    <Content Include="Views\Profile\MyCourse.cshtml" />
+    <Content Include="Views\Profile\Exam.cshtml" />
+    <Content Include="Views\ManagementCourse\Index.cshtml" />
+    <Content Include="Views\ManagementCourse\ManagementCourseDetail.cshtml" />
+    <Content Include="Views\ManagementCourse\ViewEditCourse.cshtml" />
+    <Content Include="Views\ManagementCourse\ViewAddvieoToCourse.cshtml" />
+    <Content Include="Views\ManagementCourse\ViewAddDocumentToCourse.cshtml" />
+    <Content Include="Views\PartialView\CourseCard.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="assets\client\documents\" />
+    <Folder Include="assets\client\videos\" />
     <Folder Include="Data\_thumbs\Files\khoahoc\" />
   </ItemGroup>
   <ItemGroup>

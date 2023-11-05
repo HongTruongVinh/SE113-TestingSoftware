@@ -42,7 +42,6 @@
                                     <th>Thời gian làm bài</th>
                                     <th>Tổng số câu hỏi</th>
                                     <th>Khóa học</th>
-                                    <th>Trạng thái</th>
                                     <th></th>
                                     <th></th>
 
@@ -63,7 +62,7 @@
                                                 <td>@product1.Name </td>
                                             }
                                         }
-                                        <td><a href="#" class="badge bg-info">@Html.Raw(@item.Status ? "<strong>Kích hoạt</strong>" : "<font style='color:red;'>Khóa</font>")</a></td>
+                                        @*<td><a href="#" class="badge bg-info">@Html.Raw(@item.Status ?  "<strong>Kích hoạt</strong>" : "<font style='color:red;'>Khóa</font>")</a></td>*@
                                         <td style="width:10px;">
                                             <a class="badge btn-link" href="#" id="alert_@item.ID" role="button" data-toggle="modal" data-target="#exam-edit-@item.ID">
                                                 <i class="fas fa-edit"></i>
@@ -285,19 +284,19 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="field-1" class="control-label">Tên bài kiểm tra</label>
-                            <input type="text" class="form-control" id="m_name" placeholder="Tên bài kiểm tra">
+                            <input type="text" class="form-control" id="m_name" name="name" placeholder="Tên bài kiểm tra">
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
                             <label for="field-2" class="control-label">Mã bài kiểm tra</label>
-                            <input type="text" class="form-control" id="m_code" placeholder="Mã bài kiểm tra">
+                            <input type="text" class="form-control" id="m_code" name="code" placeholder="Mã bài kiểm tra">
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
                             <label for="field-2" class="control-label">Tên thể hiện</label>
-                            <input type="text" class="form-control" id="m_metatitle" placeholder="Tên thể hiện">
+                            <input type="text" class="form-control" id="m_metatitle" name="metatitle" placeholder="Tên thể hiện">
                         </div>
                     </div>
                 </div>
@@ -305,7 +304,7 @@
                     <div class="col-md-12">
                         <div class="form-group no-margin">
                             <label for="field-7" class="control-label">List câu hỏi</label>
-                            <input type="text" class="form-control" id="m_questionlist" placeholder="List ID câu hỏi dạng *1**2*">
+                            <input type="text" class="form-control" id="m_questionlist" name="questionlist" placeholder="List ID câu hỏi dạng *1**2*">
 
                         </div>
                     </div>
@@ -314,13 +313,13 @@
                     <div class="col-md-8">
                         <div class="form-group no-margin">
                             <label for="field-7" class="control-label">List đáp án</label>
-                            <input type="text" class="form-control" id="m_answerlist" placeholder="List đáp án dạng A,B,C">
+                            <input type="text" class="form-control" id="m_answerlist" name="answerlist" placeholder="List đáp án dạng A,B,C">
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group no-margin">
                             <label for="field-7" class="control-label">Thời gian làm bài</label>
-                            <input type="text" class="form-control" id="m_time" placeholder="nhập số phút làm bài">
+                            <input type="text" class="form-control" id="m_time" name="time" placeholder="nhập số phút làm bài">
                         </div>
                     </div>
                 </div>
@@ -328,7 +327,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="field-1" class="control-label">Khóa học</label>
-                            <select class="form-control" id="ddlProduct" placeholder="---Chọn khóa học---">
+                            <select class="form-control" id="ddlProduct" name="productid" placeholder="---Chọn khóa học---">
                                 @foreach (var itemproduct in productlist)
                                 {
                                     <option value="@itemproduct.ID">@itemproduct.Name</option>
@@ -342,13 +341,13 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <label for="field-2" class="control-label">Tổng số câu hỏi</label>
-                            <input type="text" class="form-control" id="m_totalquestion" placeholder="Tổng số câu hỏi">
+                            <input type="text" class="form-control" id="m_totalquestion" name="totalquestion" placeholder="Tổng số câu hỏi">
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
                             <label for="field-2" class="control-label">Tổng điểm</label>
-                            <input type="text" class="form-control" id="m_totalscore" placeholder="Tổng điểm">
+                            <input type="text" class="form-control" id="m_totalscore" name="totalscore" placeholder="Tổng điểm">
                         </div>
                     </div>
 
@@ -357,7 +356,7 @@
                     <div class="col-md-12">
                         <div class="form-group no-margin">
                             <label for="field-7" class="control-label">Nội dung câu hỏi tự luận</label>
-                            <input type="text" class="form-control" id="m_questionessay" placeholder="Nội dung câu hỏi tự luận nếu có">
+                            <input type="text" class="form-control" id="m_questionessay" name="questionessay" placeholder="Nội dung câu hỏi tự luận nếu có">
 
                         </div>
                     </div>
@@ -366,14 +365,14 @@
                     <div class="col-md-4">
                         <div class="form-group no-margin">
                             <label for="field-7" class="control-label">List điểm</label>
-                            <input type="text" class="form-control" id="m_scorelist">
+                            <input type="text" class="form-control" name="scorelist" id="m_scorelist">
 
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group no-margin">
                             <label for="field-7" class="control-label">Người tham gia kiểm tra</label>
-                            <input type="text" class="form-control" id="m_userlist">
+                            <input type="text" class="form-control" name="userlist" id="m_userlist">
 
                         </div>
                     </div>
@@ -381,7 +380,7 @@
                         <div class="form-group no-margin">
                             <label for="field-7" class="control-label">Ngày bắt đầu</label>
                             <div id="sandbox-container">
-                                <input type="text" class="form-control" id="m_startdate">
+                                <input type="text" class="form-control" name="startdate" id="m_startdate">
                             </div>
                         </div>
                     </div>
@@ -389,7 +388,7 @@
                         <div class="form-group no-margin">
                             <label for="field-7" class="control-label">Ngày kết thúc</label>
                             <div id="sandbox-container">
-                                <input type="text" class="form-control" id="m_enddate">
+                                <input type="text" class="form-control" name="enddate" id="m_enddate">
                             </div>
                         </div>
                     </div>

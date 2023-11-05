@@ -241,7 +241,7 @@
         },1000);
     }
 </script>
-    <script>
+<script>
         $(document).ready(function()
         {
             $(".remove-cart-course").each(function()
@@ -251,7 +251,7 @@
                     var bid = $(this).data('bid');
                     AddOptionIntoList(bid);
                     CheckListQuestion(bid);
-                });                
+                });
             });
             $("#btnFinish").click(function()
             {
@@ -260,7 +260,9 @@
                 document.getElementById("btnFinish").textContent = "Đã nộp bài";
                 $('#timer').text("00 : 00");
                 clearInterval(cdID);
-            }            
+
+
+            }
             );
             $("#btnStartQuiz").click(function()
             {
@@ -274,7 +276,7 @@
         });
         function AddOptionIntoList(bid) {
             $('button span a').each(function()
-            { 
+            {
                 if($(this).data('id') == bid) {
                     $(this).removeClass("btn slide-btn circle");
                     $(this).removeClass("btn slide-btn circleblue");
@@ -302,8 +304,9 @@
             bootbox.alert({
                 message : "Chúc mừng anh/ chị đã hoàn thành bài. Kết quả sẽ được thông báo tại mục Cá nhân trong thời gian sớm nhất<br>",
                 size : 'medium' ,
-                closeButton : false
+                closeButton : false,
             });
+
         }
         function go_full_screen()
         {
@@ -328,5 +331,5 @@
 
         }
 
-    </script>
+</script>
 }

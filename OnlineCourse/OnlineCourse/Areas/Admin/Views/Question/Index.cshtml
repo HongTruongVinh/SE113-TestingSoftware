@@ -67,7 +67,7 @@
                                         <td><a href="#" class="badge bg-info">@Html.Raw(@item.Status ? "<strong>Kích hoạt</strong>" : "<font style='color:red;'>Khóa</font>")</a></td>
                                         <td style="text-align:center;width:15px;vertical-align:middle;">
 
-                                            @Ajax.ActionLink("Xóa tài khoản", "Delete", new { @id = item.ID }, new AjaxOptions
+                                            @Ajax.ActionLink("Xóa", "Delete", new { @id = item.ID }, new AjaxOptions
                                          {
                                              Confirm = "Bạn có muốn xóa không ?",
                                              OnComplete = "$('#row_" + item.ID + "').remove()",
@@ -150,7 +150,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        </td>                                       
+                                        </td>
                                     </tr>
 
                                 }
@@ -187,6 +187,7 @@
     <!-- Datatables init -->
     <script src="/assets/admin/js/pages/datatables.init.js"></script>
     <script src="/assets/admin/controller/questionController.js"></script>
+
 }
 <div id="con-close-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
     <div class="modal-dialog">

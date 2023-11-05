@@ -64,7 +64,7 @@
                                     <th>Hình ảnh</th>
                                     <th>Tên khóa học</th>
                                     <th>Thể loại</th>
-                                    <th>Trạng thái</th>
+                                    @*<th>Trạng thái</th>*@
                                     <th></th>
                                     <th></th>
 
@@ -88,7 +88,7 @@
                                         </td>
 
 
-                                        <td><a href="#" class="badge bg-info">@Html.Raw(@item.Status ? "<strong>Kích hoạt</strong>" : "<font style='color:red;'>Khóa</font>")</a></td>
+                                        @*<td><a href="#" class="badge bg-info">@Html.Raw(@item.Status ? "<strong>Kích hoạt</strong>" : "<font style='color:red;'>Khóa</font>")</a></td>*@
                                         <td style="text-align:center;width:15px;vertical-align:middle;">
 
                                             @Ajax.ActionLink("Xóa khóa học", "Delete", new { @id = item.ID }, new AjaxOptions

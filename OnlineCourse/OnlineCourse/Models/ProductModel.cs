@@ -31,6 +31,7 @@ namespace OnlineCourse.Models
         public string ListType { get; set; }
         public int CountVideo { get; set; }
         public int CountComment { get; set; }
+        public int CountLearner { get; set; }
 
         public bool IsBought { get; set; }
     }

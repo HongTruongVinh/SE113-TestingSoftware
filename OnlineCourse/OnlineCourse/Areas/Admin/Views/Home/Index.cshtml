@@ -1,6 +1,8 @@
 ﻿@{
     ViewBag.Title = "Trang quản trị";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+
+    var homeInfor = (Model.Dao.HomeDashboardInfor)ViewBag.HomeInfor;
 }
 
 <div class="row">
@@ -28,7 +30,7 @@
                 </div>
                 <div class="media-body align-self-center">
                     <div class="text-right">
-                        <h4 class="font-20 my-0 font-weight-bold"><span data-plugin="counterup">107</span></h4>
+                        <h4 class="font-20 my-0 font-weight-bold"><span data-plugin="counterup">@homeInfor.CountProduct</span></h4>
                         <p class="mb-0 mt-1 text-truncate">Tổng số khóa học</p>
                     </div>
                 </div>
@@ -52,7 +54,7 @@
                 </div>
                 <div class="media-body align-self-center">
                     <div class="text-right">
-                        <h4 class="font-20 my-0 font-weight-bold"><span data-plugin="counterup">50</span></h4>
+                        <h4 class="font-20 my-0 font-weight-bold"><span data-plugin="counterup">@homeInfor.CountLearner</span></h4>
                         <p class="mb-0 mt-1 text-truncate">Đăng ký học</p>
                     </div>
                 </div>
@@ -76,7 +78,7 @@
                 </div>
                 <div class="media-body align-self-center">
                     <div class="text-right">
-                        <h4 class="font-20 my-0 font-weight-bold"><span data-plugin="counterup">5210</span></h4>
+                        <h4 class="font-20 my-0 font-weight-bold"><span data-plugin="counterup">@homeInfor.CountUser</span></h4>
                         <p class="mb-0 mt-1 text-truncate">Số lượng người dùng</p>
                     </div>
                 </div>

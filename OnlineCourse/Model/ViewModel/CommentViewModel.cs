@@ -15,5 +15,6 @@ namespace Model.ViewModel
         public string FullName { get; set; }
         public long ParentID { get; set; }
         public int Rate { get; set; }
+        public string LinkAvatar { get; set; }
     }
 }

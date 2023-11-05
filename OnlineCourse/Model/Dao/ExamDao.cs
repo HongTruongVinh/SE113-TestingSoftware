@@ -106,5 +106,27 @@ namespace Model.Dao
              
         }
 
+        public List<Exam> ListExamOfUser(int userId)
+        {
+            List<Exam> exams = new List<Exam>();
+
+            WishProductDao ownProductDao = new WishProductDao();
+
+            var userCourses = ownProductDao.GetListWishProduct(userId);
+
+            foreach(var exam  in DataProvider.Ins.DB.Exams)
+            {
+                foreach (var course in userCourses)
+                {
+                    if (exam.ProductID == course.ID)
+                    {
+                        exams.Add(exam);
+                    }
+                }
+            }
+
+            return exams;
+        }
+
     }
 }

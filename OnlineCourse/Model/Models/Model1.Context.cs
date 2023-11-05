@@ -37,6 +37,8 @@ namespace Model.Models
         public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<User_Role> User_Role { get; set; }
-        public virtual DbSet<OwnProduct> OwnProducts { get; set; }
+        public virtual DbSet<CourseDocument> CourseDocuments { get; set; }
+        public virtual DbSet<CourseVideo> CourseVideos { get; set; }
+        public virtual DbSet<WishProduct> WishProducts { get; set; }
     }
 }

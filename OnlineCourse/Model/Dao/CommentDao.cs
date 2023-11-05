@@ -42,7 +42,8 @@ namespace Model.Dao
                              UserID = a.UserID,
                              FullName = b.Name,
                              ParentID = a.ParentID,
-                             Rate = a.Rate
+                             Rate = a.Rate,
+                             LinkAvatar = b.LinkImage
                          }).AsEnumerable().Select(x => new CommentViewModel()
                             {
                                 ID = x.ID,
@@ -52,8 +53,9 @@ namespace Model.Dao
                                 UserID = (long)x.UserID,
                                 FullName = x.FullName,
                                 ParentID = (long)x.ParentID,
-                                Rate = (int)x.Rate
-                            });
+                                Rate = (int)x.Rate,
+                                LinkAvatar = x.LinkAvatar
+                         });
             return model.OrderByDescending(y => y.ID).ToList();
         }
     }

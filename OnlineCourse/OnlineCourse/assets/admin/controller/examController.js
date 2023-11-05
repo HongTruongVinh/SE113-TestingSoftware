@@ -22,13 +22,13 @@
             var questionessay = document.getElementById('m_questionessay');
             var userlist = document.getElementById('m_userlist');
             var scorelist = document.getElementById('m_scorelist');
-
+            
             if (name.value == "" || questionlist.value == "" || time.value == "") {
                 bootbox.alert("Chưa nhập thông tin cần thiết")
                 return;
-            }
+            } 
             $.ajax({
-                url: "/Exam/AddExamAjax",
+                url: "Exam/AddExamAjax",
                 data:
                     {
                         name: name.value,

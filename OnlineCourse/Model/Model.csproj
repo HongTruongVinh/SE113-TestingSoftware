@@ -85,8 +85,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Dao\CommentDao.cs" />
+    <Compile Include="Dao\CourseDocumentDao.cs" />
+    <Compile Include="Dao\CourseVideoDao.cs" />
     <Compile Include="Dao\ExamDao.cs" />
     <Compile Include="Dao\GetInforDao.cs" />
+    <Compile Include="Dao\ManagementCourseDao.cs" />
     <Compile Include="Dao\OwnProductDao.cs" />
     <Compile Include="Dao\ProductCategoryDao.cs" />
     <Compile Include="Dao\ProductDao.cs" />
@@ -95,6 +98,12 @@
     <Compile Include="Dao\RoleDao.cs" />
     <Compile Include="Dao\UserDao.cs" />
     <Compile Include="Models\Comment.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CourseDocument.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CourseVideo.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DataProvider.cs" />
@@ -115,9 +124,6 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Model1.edmx</DependentUpon>
-    </Compile>
-    <Compile Include="Models\OwnProduct.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Permission.cs">
       <DependentUpon>Model1.tt</DependentUpon>
@@ -147,6 +153,9 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\User_Role.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\WishProduct.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="ViewModel\CommentViewModel.cs" />
