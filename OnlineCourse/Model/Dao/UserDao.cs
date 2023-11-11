@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Model.Data;
 using Model.Models;
 using PagedList;
 
@@ -82,7 +83,9 @@ namespace Model.Dao
         }
         public int Login(string userName, string passWord,bool isLoginAdmin = false)
         {
-            var result = DataProvider.Ins.DB.Users.SingleOrDefault(x => x.UserName == userName);
+            //var result = DataProvider.Ins.DB.Users.SingleOrDefault(x => x.UserName == userName);
+            var result = new DataUser().GetUserByUsername(userName);//for unit test
+
             if (result == null)
                 return 0;
             else

@@ -39,13 +39,13 @@ namespace OnlineCourse.Controllers
                     var user = dao.GetByUserName(model.UserName);
                     var usersession = SetUserSession(user);
                     usersession.Address = user.Address;
-                    usersession.WishListIdProduct = new ProductDao().GetWishListProduct((int)user.ID);
+                    //usersession.WishListIdProduct = new ProductDao().GetWishListProduct((int)user.ID); // comment for unit test
                     Session.Add(CommonConstants.USER_SESSION, usersession);
                     return RedirectToAction("Index", "Home");
                 }
                 else if (result == 0)
                 {
-                    ModelState.AddModelError("", "Tài khoản không tồn tai");
+                    ModelState.AddModelError("", "Tài khoản không tồn tại");
                 }
                 else if (result == -1)
                 {

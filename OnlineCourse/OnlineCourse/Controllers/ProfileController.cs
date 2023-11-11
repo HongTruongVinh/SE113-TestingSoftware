@@ -15,12 +15,27 @@ namespace OnlineCourse.Controllers
     public class ProfileController : Controller
     {
         // GET: Profile
-        public ActionResult Index()
+        //public ActionResult Index()
+        //{
+        //    var user = (OnlineCourse.Common.UserLogin)Session[OnlineCourse.Common.CommonConstants.USER_SESSION];
+        //    if (user == null)
+        //    {
+        //        return new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Home", action = "Index" }));
+        //    }
+        //    return View(user);
+        //}
+
+
+        /// <summary>
+        /// funtion for unit test
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult Index(UserLogin user)
         {
-            var user = (OnlineCourse.Common.UserLogin)Session[OnlineCourse.Common.CommonConstants.USER_SESSION];
             if (user == null)
             {
-                return new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Home", action = "Index" }));
+                var viewhome = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Home", action = "Index" }));
+                return viewhome;
             }
             return View(user);
         }
