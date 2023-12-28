@@ -7,7 +7,13 @@ using System.Threading.Tasks;
 
 namespace Model.Dao
 {
-    public class WishProductDao
+    public interface IWishProductDao
+    {
+        List<Product> GetListCartProduct(long userId);
+        List<Product> GetListWishProduct(long userId);
+    }
+
+    public class WishProductDao: IWishProductDao
     {
         public WishProductDao() { }
 

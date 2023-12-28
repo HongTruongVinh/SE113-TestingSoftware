@@ -12,10 +12,17 @@ namespace OnlineCourse.Areas.Admin.Controllers
 {
     public class LoginController : Controller
     {
-        //
-        // GET: /Admin/Login/
+        public IUserLoginManager _userLoginManager {  get; set; }
+        public IUserDao _userDao { get; set; }
 
-        
+
+        public LoginController() 
+        {
+            _userLoginManager = new UserLoginManager(this);
+            _userDao = new UserDao();
+        }
+
+        // GET: /Admin/Login/
         public ActionResult Index()
         {
             return View();
@@ -25,17 +32,17 @@ namespace OnlineCourse.Areas.Admin.Controllers
         {
             if(ModelState.IsValid)
             {
-                var dao = new UserDao();
-                var result = dao.Login(model.UserName, Encryptor.MD5Hash(model.Password), true);
+                var result = _userDao.Login(model.UserName, Encryptor.MD5Hash(model.Password), true);
                 if(result == 1)
                 {
-                    var user = dao.GetByUserName(model.UserName);
-                    if (dao.isAdminRole((int)user.ID))
+                    var user = _userDao.GetByUserName(model.UserName);
+                    if (_userDao.isAdminRole((int)user.ID))
                     {
                         var usersession = new UserLogin();
                         usersession.UserName = user.UserName;
                         usersession.UserID = user.ID;
-                        Session.Add(CommonConstants.USER_SESSION, usersession);
+                        //Session.Add(CommonConstants.USER_SESSION, usersession);
+                        _userLoginManager.AddUserLogin(usersession);
                         
                         return RedirectToAction("Index", "Home");
                     }

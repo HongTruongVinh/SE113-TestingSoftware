@@ -11,21 +11,27 @@ namespace OnlineCourse.Areas.Admin.Controllers
 {
     public class PermissionController : Controller
     {
-        // GET: Admin/Permission
+        public IRoleDao _roleDao {  get; set; }
 
-        [AdminAuthorize(PermissionName = "Permission_Update", IsAccessPage = true)]
+        public PermissionController()
+        {
+            _roleDao = new RoleDao();
+        }
+
+        // GET: Admin/Permission
+        //[AdminAuthorize(PermissionName = "Permission_Update", IsAccessPage = true)]
         public ActionResult Index()
         {
-            return View(new RoleDao().Roles());
+            return View(_roleDao.Roles());
         }
 
 
         [HttpGet]
-        [AdminAuthorize(PermissionName = "Permission_Update")]
+        //[AdminAuthorize(PermissionName = "Permission_Update")]
         public ActionResult ViewPermissionDetail(int roleId)
         {
-            Dictionary<string, string> listPer_Ihave = new RoleDao().GetListPer_IHave(roleId + 1);// Role' ID start from 1
-            Dictionary<string, string> listPer_IhaveNo = new RoleDao().GetListPer_IHaveNo(listPer_Ihave);
+            Dictionary<string, string> listPer_Ihave = _roleDao.GetListPer_IHave(roleId + 1);// Role' ID start from 1
+            Dictionary<string, string> listPer_IhaveNo = _roleDao.GetListPer_IHaveNo(listPer_Ihave);
 
             return Json(new
             {
@@ -36,10 +42,10 @@ namespace OnlineCourse.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        [AdminAuthorize(PermissionName = "Permission_Update")]
+        //[AdminAuthorize(PermissionName = "Permission_Update")]
         public ActionResult UpdatePermissionDetail(int roleId, List<string> listPermissionName)
         {
-            bool success = new RoleDao().UpdateMyPermission(roleId + 1, listPermissionName);// Role' ID start from 1
+            bool success = _roleDao.UpdateMyPermission(roleId + 1, listPermissionName);// Role' ID start from 1
 
             return Json(new
             {

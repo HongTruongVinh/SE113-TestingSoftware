@@ -7,7 +7,31 @@ using PagedList;
 
 namespace Model.Dao
 {
-    public class ProductDao
+    public interface IProductDao
+    {
+        Dictionary<string, bool> GetWishListProduct(int userId);
+        bool BuyProduct(int userId, int productId);
+        bool AddProductToCart(int userId, int productId);
+        bool DeleteProductFromCart(int userId, int productId);
+        User GetCreatedByUser(int userId);
+        int GetCountComment(long productId);
+        int GetCountLearner(long productId);
+        List<Product> ListAllProduct();
+
+        int CountByCategoryID(string searchString, long CategoryID);
+        List<Product> ListByCategoryID(string searchString, long CategoryID, int page, int itemPerPage);
+        Product ViewDetail(long id);
+        bool IsProductOfUserSession(int productId, int userId);
+
+        long Insert(Product entity);
+        bool Update(Product entity);
+        bool Delete(int id);
+
+        IEnumerable<Product> ListAllPaging(long cateID, string searchString, int page, int pagesize);
+
+    }
+
+    public class ProductDao: IProductDao
     {
         
         public ProductDao()

@@ -7,7 +7,17 @@ using PagedList;
 
 namespace Model.Dao
 {
-    public class QuestionDao
+    public interface IQuestionDao
+    {
+        List<Question> ListExamQuestion(string pList);
+        Question ViewDetail(int id);
+        long Insert(Question entity);
+        bool Update(Question entity);
+        bool Delete(int id);
+        IEnumerable<Question> ListAllPaging(string searchString, int page, int pagesize);
+    }
+
+    public class QuestionDao: IQuestionDao
     {
         
         public QuestionDao()

@@ -189,7 +189,9 @@
     <Compile Include="Common\CommonConstants.cs" />
     <Compile Include="Common\ConvertLanguage.cs" />
     <Compile Include="Common\Encryptor.cs" />
+    <Compile Include="Common\FileManager.cs" />
     <Compile Include="Common\UserLogin.cs" />
+    <Compile Include="Common\UserLoginManager.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\ExamController.cs" />
     <Compile Include="Controllers\HomeController.cs" />

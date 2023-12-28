@@ -8,7 +8,14 @@ using PagedList;
 
 namespace Model.Dao
 {
-    public class ProductCategoryDao
+    public interface IProductCategoryDao
+    {
+        List<ProductCategory> ListAll();
+        ProductCategory ViewDetail(long id);
+        int CountProduct();
+    }
+
+    public class ProductCategoryDao: IProductCategoryDao
     {
          
         public ProductCategoryDao()

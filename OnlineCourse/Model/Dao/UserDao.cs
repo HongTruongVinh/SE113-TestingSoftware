@@ -2,14 +2,28 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Model.Data;
 using Model.Models;
 using PagedList;
 
 
 namespace Model.Dao
 {
-    public class UserDao
+    public interface IUserDao
+    {
+        long Insert(User entity);
+        bool Update(User entity);
+        bool Delete(int id);
+        User GetByUserName(string username);
+        User ViewDetail(int id);
+        int Login(string userName, string passWord, bool isLoginAdmin = false);
+        bool isAdminRole(int UserId);
+        bool isTeacherRole(int UserId);
+        bool isLearnerRole(int UserId);
+
+        IEnumerable<User> ListAllPaging(string searchString, int page, int pagesize);
+    }
+
+    public class UserDao: IUserDao
     {
        
         public UserDao()
@@ -81,11 +95,10 @@ namespace Model.Dao
 
              return DataProvider.Ins.DB.Users.Find(id);                
         }
+        
         public int Login(string userName, string passWord,bool isLoginAdmin = false)
         {
-            //var result = DataProvider.Ins.DB.Users.SingleOrDefault(x => x.UserName == userName);
-            var result = new DataUser().GetUserByUsername(userName);//for unit test
-
+            var result = DataProvider.Ins.DB.Users.SingleOrDefault(x => x.UserName == userName);
             if (result == null)
                 return 0;
             else

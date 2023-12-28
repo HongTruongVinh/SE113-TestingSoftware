@@ -97,8 +97,6 @@
     <Compile Include="Dao\ResultDao.cs" />
     <Compile Include="Dao\RoleDao.cs" />
     <Compile Include="Dao\UserDao.cs" />
-    <Compile Include="Data\DataProduct.cs" />
-    <Compile Include="Data\DataUser.cs" />
     <Compile Include="Models\Comment.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>

@@ -1,4 +1,5 @@
-﻿using Model.Dao;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Model.Dao;
 using Model.Models;
 using OnlineCourse.Common;
 using OnlineCourse.Models;
@@ -14,182 +15,158 @@ namespace OnlineCourse.Controllers
 {
     public class ProfileController : Controller
     {
-        // GET: Profile
-        //public ActionResult Index()
-        //{
-        //    var user = (OnlineCourse.Common.UserLogin)Session[OnlineCourse.Common.CommonConstants.USER_SESSION];
-        //    if (user == null)
-        //    {
-        //        return new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Home", action = "Index" }));
-        //    }
-        //    return View(user);
-        //}
+        public IUserLoginManager _userLoginManager { get; set; }
+        public IResultDao _resultDao { get; set; }
+        public IWishProductDao _wishProductDao { get; set; }
+        public IExamDao _examDao { get; set; }
 
+        public IProductDao _productDao { get; set; }
 
-        /// <summary>
-        /// funtion for unit test
-        /// </summary>
-        /// <returns></returns>
-        public ActionResult Index(UserLogin user)
+        public IUserDao _userDao { get; set; }
+
+        public IFileManager _fileManager { get; set; }
+
+        public ProfileController() 
         {
-            if (user == null)
-            {
-                var viewhome = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Home", action = "Index" }));
-                return viewhome;
-            }
+            _userLoginManager = new UserLoginManager(this);
+            _resultDao = new ResultDao();
+            _wishProductDao = new WishProductDao();
+            _examDao = new ExamDao();
+            _productDao = new ProductDao();
+            _userDao = new UserDao();
+            _fileManager = new FileManager(this);
+        }
+
+        // GET: Profile
+        public ActionResult Index()
+        {
+            //var user = (OnlineCourse.Common.UserLogin)Session[OnlineCourse.Common.CommonConstants.USER_SESSION];
+            //if (user == null)
+            //{
+            //    return new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Home", action = "Index" }));
+            //}
+
+            var user = _userLoginManager.GetUserLogin();
+
             return View(user);
         }
 
         public ActionResult AcademicAchievement()
         {
-            var user = (OnlineCourse.Common.UserLogin)Session[OnlineCourse.Common.CommonConstants.USER_SESSION];
-            if (user == null)
-            {
-                return new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Home", action = "Index" }));
-            }
+            //var user = (OnlineCourse.Common.UserLogin)Session[OnlineCourse.Common.CommonConstants.USER_SESSION];
+            //if (user == null)
+            //{
+            //    return new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Home", action = "Index" }));
+            //}
 
-            ViewBag.ListResultExam = new ResultDao().GetListResultExamOfUser(user.UserID);
+            var user = _userLoginManager.GetUserLogin();
+
+            ViewBag.ListResultExam = _resultDao.GetListResultExamOfUser(user.UserID);
 
             return View(user);
         }
 
         public ActionResult Exam()
         {
-            var user = (OnlineCourse.Common.UserLogin)Session[OnlineCourse.Common.CommonConstants.USER_SESSION];
-            if (user == null)
-            {
-                return new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Home", action = "Index" }));
-            }
+            //var user = (OnlineCourse.Common.UserLogin)Session[OnlineCourse.Common.CommonConstants.USER_SESSION];
+            //if (user == null)
+            //{
+            //    return new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Home", action = "Index" }));
+            //}
 
-            ViewBag.ListOwnProducts = ConvertToProductModels(new WishProductDao().GetListWishProduct(user.UserID), true);
+            var user = _userLoginManager.GetUserLogin();
 
-            ViewBag.Exams = (List<Model.Models.Exam>)new ExamDao().ListExamOfUser((int)user.UserID);
+            ViewBag.ListOwnProducts = ConvertToProductModels(_wishProductDao.GetListWishProduct(user.UserID), true);
+
+            ViewBag.Exams = (List<Model.Models.Exam>)_examDao.ListExamOfUser((int)user.UserID);
 
             return View(user);
         }
 
         public ActionResult CourseBought()
         {
-            var user = (OnlineCourse.Common.UserLogin)Session[OnlineCourse.Common.CommonConstants.USER_SESSION];
-            if (user == null)
-            {
-                return new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Home", action = "Index" }));
-            }
+            //var user = (OnlineCourse.Common.UserLogin)Session[OnlineCourse.Common.CommonConstants.USER_SESSION];
+            //if (user == null)
+            //{
+            //    return new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Home", action = "Index" }));
+            //}
 
-            ViewBag.ListOwnProducts = ConvertToProductModels(new WishProductDao().GetListWishProduct(user.UserID), true);
+            var user = _userLoginManager.GetUserLogin();
+
+            ViewBag.ListOwnProducts = ConvertToProductModels(_wishProductDao.GetListWishProduct(user.UserID), true);
 
             return View(user);
         }
 
         public ActionResult Cart()
         {
-            var user = (OnlineCourse.Common.UserLogin)Session[OnlineCourse.Common.CommonConstants.USER_SESSION];
-            if (user == null)
-            {
-                return new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Home", action = "Index" }));
-            }
+            //var user = (OnlineCourse.Common.UserLogin)Session[OnlineCourse.Common.CommonConstants.USER_SESSION];
+            //if (user == null)
+            //{
+            //    return new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Home", action = "Index" }));
+            //}
 
-            ViewBag.CartProducts = ConvertToProductModels(new WishProductDao().GetListCartProduct(user.UserID), false);
+            var user = _userLoginManager.GetUserLogin();
+
+            ViewBag.CartProducts = ConvertToProductModels(_wishProductDao.GetListCartProduct(user.UserID), false);
 
             return View(user);
         }
 
         public ActionResult MyCourse()
         {
-            var user = (OnlineCourse.Common.UserLogin)Session[OnlineCourse.Common.CommonConstants.USER_SESSION];
-            if (user == null)
-            {
-                return new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Home", action = "Index" }));
-            }
+            //var user = (OnlineCourse.Common.UserLogin)Session[OnlineCourse.Common.CommonConstants.USER_SESSION];
+            //if (user == null)
+            //{
+            //    return new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Home", action = "Index" }));
+            //}
+
+            var user = _userLoginManager.GetUserLogin();
+
             return RedirectToAction("Index", "ManagementCourse");
         }
 
         [System.Web.Http.HttpPost]
         public ActionResult UpdateProfile(UserLogin _user, HttpPostedFileBase imageFile)
         {
-            try
+            User user = new User();
+
+            user = _userDao.ViewDetail(Convert.ToInt16(_user.UserID));
+
+            user.Name = _user.FullName;
+            user.Address = _user.Address;
+            user.Email = _user.Email;
+            user.Phone = _user.Phone;
+
+            string path = _fileManager.UploadImage(imageFile);
+            if (!path.Equals("-1"))
             {
-                var dao = new UserDao();
-                User user = new User();
-
-                user = dao.ViewDetail(Convert.ToInt16(_user.UserID));
-
-                user.Name = _user.FullName;
-                user.Address = _user.Address;
-                user.Email = _user.Email;
-                user.Phone = _user.Phone;
-
-                string path = UploadImage(imageFile);
-                if (!path.Equals("-1"))
-                {
-                    user.LinkImage = path;
-                }
-
-                if (user.LinkImage == null)
-                {
-                    user.LinkImage = "/assets/client/images/avatar/00.jpg";
-                }
-
-                bool editresult = dao.Update(user);
-
-                if (editresult == true)
-                {
-                    user = dao.ViewDetail(Convert.ToInt16(_user.UserID));
-                    var usersession = SetUserSession(user);
-                    Session.Remove(CommonConstants.USER_SESSION);
-                    Session.Add(CommonConstants.USER_SESSION, usersession);
-                    return RedirectToAction("Index");
-                }
-                else
-                {
-                    return Json(new { status = false });
-                }
+                user.LinkImage = path;
             }
-            catch
+
+            if (user.LinkImage == null)
             {
-                return Json(new
-                {
-                    status = false
-                });
+                user.LinkImage = "/assets/client/images/avatar/00.jpg";
             }
-        }
 
-        public string UploadImage(HttpPostedFileBase file)
-        {
-            Random r = new Random();
-            string path = "-1";
-            int random = r.Next();
+            bool editresult = _userDao.Update(user);
 
-            if (file != null && file.ContentLength > 0)
+            if (editresult == true)
             {
-                string extension = Path.GetExtension(file.FileName);
-                if (extension.ToLower().Equals(".jpg") || extension.ToLower().Equals(".img") || extension.ToLower().Equals(".png"))
-                {
-                    try
-                    {
-                        path = Path.Combine(Server.MapPath("~/assets/client/images/avatar"), random + Path.GetFileName(file.FileName));
-                        file.SaveAs(path);
-                        path = "/assets/client/images/avatar/" + random + Path.GetFileName(file.FileName);
-
-                    }
-                    catch
-                    {
-                        path = "-1";
-                    }
-                }
-                else
-                {
-                    Response.Write("<script>alert('Only jpg, png or img formats are acceptable....'); </script>");
-                }
+                user = _userDao.ViewDetail(Convert.ToInt16(_user.UserID));
+                var usersession = SetUserSession(user);
+                //Session.Remove(CommonConstants.USER_SESSION);
+                //Session.Add(CommonConstants.USER_SESSION, usersession);
+                _userLoginManager.RemoveUserLogin();
+                _userLoginManager.AddUserLogin(usersession);
+                return RedirectToAction("Index");
             }
             else
             {
-                Response.Write("<script>alert('Please select a file'); </script>");
-                path = "-1";
+                return Json(new { status = false });
             }
-
-            return path;
         }
+
 
         UserLogin SetUserSession(User user)
         {
@@ -199,19 +176,20 @@ namespace OnlineCourse.Controllers
             usersession.FullName = user.Name;
             usersession.Email = user.Email;
 
-            if (user.LinkImage == null)
-            {
-                usersession.Image = "/assets/client/images/avatar/00.jpg";
-            }
-            else
-            {
-                usersession.Image = user.LinkImage;
-            }
+            //if (user.LinkImage == null)
+            //{
+            //    usersession.Image = "/assets/client/images/avatar/00.jpg";
+            //}
+            //else
+            //{
+            //    usersession.Image = user.LinkImage;
+            //}
+            usersession.Image = user.LinkImage;
 
             usersession.Role = "Học viên";
             usersession.Phone = user.Phone;
             usersession.Address = user.Address;
-            usersession.WishListIdProduct = new ProductDao().GetWishListProduct((int)user.ID);
+            usersession.WishListIdProduct = _productDao.GetWishListProduct((int)user.ID);
             return usersession;
         }
 
@@ -233,11 +211,9 @@ namespace OnlineCourse.Controllers
                 model.MetaTitle = product.MetaTitle;
 
                 int createrID = (int)Convert.ToDouble(product.CreateBy);
-                model.CreateBy = new ProductDao().GetCreatedByUser(createrID).Name;
+                model.CreateBy = _productDao.GetCreatedByUser(createrID).Name;
 
-                model.CountVideo = product.ListFile.Split('*').Length;
-
-                model.CountComment = new ProductDao().GetCountComment(product.ID);
+                model.CountComment = _productDao.GetCountComment(product.ID);
 
                 productModels.Add(model);
             }
@@ -248,7 +224,7 @@ namespace OnlineCourse.Controllers
         [System.Web.Http.HttpGet]
         public ActionResult BuyProduct(int userId, int productId)
         {
-            bool status = new ProductDao().BuyProduct(userId, productId);
+            bool status = _productDao.BuyProduct(userId, productId);
 
             if (status == true)
             {
@@ -263,14 +239,19 @@ namespace OnlineCourse.Controllers
         [System.Web.Mvc.HttpGet]
         public ActionResult AddProductToCart(int userId, int productId)
         {
-            bool status = new ProductDao().AddProductToCart(userId, productId);
+            bool status = _productDao.AddProductToCart(userId, productId);
 
             if (status == true)
             {
-                var usersession = (OnlineCourse.Common.UserLogin)Session[OnlineCourse.Common.CommonConstants.USER_SESSION];
-                Session.Remove(CommonConstants.USER_SESSION);
+                //var usersession = (OnlineCourse.Common.UserLogin)Session[OnlineCourse.Common.CommonConstants.USER_SESSION];
+                //Session.Remove(CommonConstants.USER_SESSION);
+                //usersession.WishListIdProduct.Add(productId.ToString(), false);
+                //Session.Add(CommonConstants.USER_SESSION, usersession);
+
+                var usersession = _userLoginManager.GetUserLogin();
+                _userLoginManager.RemoveUserLogin();
                 usersession.WishListIdProduct.Add(productId.ToString(), false);
-                Session.Add(CommonConstants.USER_SESSION, usersession);
+                _userLoginManager.AddUserLogin(usersession);
 
                 return Json(new { status = true }); ;
             }
@@ -283,14 +264,19 @@ namespace OnlineCourse.Controllers
         [System.Web.Http.HttpPost]
         public ActionResult DeleteProduct(int userId, int productId)
         {
-            bool status = new ProductDao().DeleteProductFromCart(userId, productId);
+            bool status = _productDao.DeleteProductFromCart(userId, productId);
 
             if (status == true)
             {
-                var usersession = (OnlineCourse.Common.UserLogin)Session[OnlineCourse.Common.CommonConstants.USER_SESSION];
-                Session.Remove(CommonConstants.USER_SESSION);
+                //var usersession = (OnlineCourse.Common.UserLogin)Session[OnlineCourse.Common.CommonConstants.USER_SESSION];
+                //Session.Remove(CommonConstants.USER_SESSION);
+                //usersession.WishListIdProduct.Remove(usersession.WishListIdProduct.Where(x => x.Key == productId.ToString()).SingleOrDefault().Key);
+                //Session.Add(CommonConstants.USER_SESSION, usersession);
+
+                var usersession = _userLoginManager.GetUserLogin();
+                _userLoginManager.RemoveUserLogin();
                 usersession.WishListIdProduct.Remove(usersession.WishListIdProduct.Where(x => x.Key == productId.ToString()).SingleOrDefault().Key);
-                Session.Add(CommonConstants.USER_SESSION, usersession);
+                _userLoginManager.AddUserLogin(usersession);
 
                 return RedirectToAction("Cart");
             }

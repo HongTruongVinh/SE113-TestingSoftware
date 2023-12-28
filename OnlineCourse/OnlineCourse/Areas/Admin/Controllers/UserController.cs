@@ -16,14 +16,24 @@ namespace OnlineCourse.Areas.Admin.Controllers
 {
     public class UserController : BaseController
     {
+        public IUserDao _userDao {  get; set; }
+        public IRoleDao _roleDao { get; set; }
+
+
+        public UserController()
+        {
+            _userDao = new UserDao();
+            _roleDao = new RoleDao();
+        }
+
+
         //
         // GET: /Admin/User/
 
-        [AdminAuthorize(PermissionName = "User_View", IsAccessPage = true)]
+        //[AdminAuthorize(PermissionName = "User_View", IsAccessPage = true)]
         public ActionResult Index(string searchString, int page = 1, int pageSize = 200)
         {
-            var dao = new UserDao();
-            var model = dao.ListAllPaging(searchString, page, pageSize);
+            var model = _userDao.ListAllPaging(searchString, page, pageSize);
             ViewBag.SearchString = searchString;
             return View(model);
         }
@@ -31,38 +41,27 @@ namespace OnlineCourse.Areas.Admin.Controllers
         [HttpPost]
         public JsonResult AddUserAjax(string username, string name, string password, string address, string email, string phone)
         {
-           try
-           {
-               var dao = new UserDao();
-               User user = new User();
+            User user = new User();
 
-               var encryptedMd5Pas = Encryptor.MD5Hash(password);
-               user.Password = encryptedMd5Pas;
-               user.CreateDate = DateTime.Now;
-               user.UserName = username;
-               user.Name = name;
-               user.Address = address;
-               user.Email = email;
-               user.Phone = phone;
-               user.Status = true;
+            var encryptedMd5Pas = Encryptor.MD5Hash(password);
+            user.Password = encryptedMd5Pas;
+            user.CreateDate = DateTime.Now;
+            user.UserName = username;
+            user.Name = name;
+            user.Address = address;
+            user.Email = email;
+            user.Phone = phone;
+            user.Status = true;
 
-               long id = dao.Insert(user);
-               if(id > 0)
-               {
-                   return Json(new {status = true});
-               }
-               else
-               { 
-                   return Json(new {status = false});
-               }
-           }
-           catch
-           {
-               return Json(new
-               {
-                   status = false
-               });
-           }
+            long id = _userDao.Insert(user);
+            if (id > 0)
+            {
+                return Json(new { status = true });
+            }
+            else
+            {
+                return Json(new { status = false });
+            }
         }
 
         //[HttpPost]
@@ -112,67 +111,56 @@ namespace OnlineCourse.Areas.Admin.Controllers
 
 
         [HttpGet]
-        [AdminAuthorize(PermissionName = "User_Update")]
+        //[AdminAuthorize(PermissionName = "User_Update")]
         public ActionResult UpdateUser(int id)
         {
-            User user = new UserDao().ViewDetail(id);
+            User user = _userDao.ViewDetail(id);
 
-            ViewBag.Role = new RoleDao().GetRoleUser(id);
+            ViewBag.Role = _roleDao.GetRoleUser(id);
 
             return PartialView("_UpdateUserPartial", user);
         }
 
         [HttpPost]
-        [AdminAuthorize(PermissionName = "User_Update")]
+        //[AdminAuthorize(PermissionName = "User_Update")]
         public ActionResult UpdateUser(User _user)
         {
-            try
+            User user = new User();
+
+            user = _userDao.ViewDetail(Convert.ToInt16(_user.ID));
+
+            user.Name = _user.Name;
+            user.Address = _user.Address;
+            user.Email = _user.Email;
+            user.Phone = _user.Phone;
+
+
+            bool editresult = _userDao.Update(user);
+
+            if (editresult == true)
             {
-                var dao = new UserDao();
-                User user = new User();
-
-                user = dao.ViewDetail(Convert.ToInt16(_user.ID));
-
-                user.Name = _user.Name;
-                user.Address = _user.Address;
-                user.Email = _user.Email;
-                user.Phone = _user.Phone;
-
-
-                bool editresult = dao.Update(user);
-
-                if (editresult == true)
-                {
-                    return Json(new { status = true });
-                }
-                else
-                {
-                    return Json(new { status = false });
-                }
+                return Json(new { status = true });
             }
-            catch
+            else
             {
-                return Json(new
-                {
-                    status = false
-                });
+                return Json(new { status = false });
             }
         }
 
         [HttpGet]
-        [AdminAuthorize(PermissionName = "User_Delete")]
+        //[AdminAuthorize(PermissionName = "User_Delete")]
         public ActionResult Delete(int id)
         {
-            User user = new UserDao().ViewDetail(id);
+            User user = _userDao.ViewDetail(id);
 
             return PartialView("_ConfirmDeleteModelPartial", user);
         }
 
         [HttpPost]
-        [AdminAuthorize(PermissionName = "User_Delete")]
+        //[AdminAuthorize(PermissionName = "User_Delete")]
         public ActionResult Delete(User user)
         {
-            bool success = new UserDao().Delete((int)user.ID);
+            bool success = _userDao.Delete((int)user.ID);
 
             return RedirectToAction("Index", new { searchString = "", page = 1 , pageSize = 200 });
         }

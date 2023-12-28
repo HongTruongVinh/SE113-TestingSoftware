@@ -7,7 +7,16 @@ using System.Threading.Tasks;
 
 namespace Model.Dao
 {
-    public class RoleDao
+    public interface IRoleDao
+    {
+        List<Role> Roles();
+        string GetRoleUser(int userId);
+        Dictionary<string, string> GetListPer_IHave(int roleId);
+        Dictionary<string, string> GetListPer_IHaveNo(Dictionary<string, string> listPer_IHave);
+        bool UpdateMyPermission(int roleId, List<string> listPermissionName);
+    }
+
+    public class RoleDao: IRoleDao
     {
         public RoleDao() { }
 

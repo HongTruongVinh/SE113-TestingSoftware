@@ -1,5 +1,4 @@
-﻿using Model.Dao;
-using OnlineCourse.App_Start;
+﻿using OnlineCourse.App_Start;
 using OnlineCourse.Common;
 using System;
 using System.Collections.Generic;
@@ -13,22 +12,27 @@ namespace OnlineCourse.Areas.Admin.Controllers
 {
     public class HomeController : BaseController
     {
-        //
+        public bool isUnitTest = false;
+
+        public IUserLoginManager _userLoginManager { get; set; }
+
+        public HomeController()
+        {
+            _userLoginManager = new UserLoginManager(this);
+        }
+
         // GET: /Admin/Home/
-
-
         public ActionResult Index()
         {
-            ViewBag.HomeInfor = new GetInforDao().GetHomeDashboardInfor();
-
             return View();
         }
 
         public ActionResult LogUot()
         {
-            Session.Remove(CommonConstants.USER_SESSION);
+            //Session.Remove(CommonConstants.USER_SESSION);
+            _userLoginManager.RemoveUserLogin();
 
-            FormsAuthentication.SignOut();
+            if (isUnitTest == false)FormsAuthentication.SignOut();
 
             return new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Login", action = "Index", Area = "Admin" }));
         }

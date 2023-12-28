@@ -7,7 +7,12 @@ using System.Threading.Tasks;
 
 namespace Model.Dao
 {
-    public class ManagementCourseDao
+    public interface IManagementCourseDao
+    {
+        List<Product> GetProductOfUser(int userId);
+    }
+
+    public class ManagementCourseDao: IManagementCourseDao
     {
         public ManagementCourseDao() { }
 

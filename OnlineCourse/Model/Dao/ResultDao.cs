@@ -7,13 +7,23 @@ using PagedList;
 
 namespace Model.Dao
 {
-    public class ResultDao
+    public interface IResultDao
+    {
+        Dictionary<string, string> GetListResultExamOfUser(long userId);
+        Result GetByUserExamID(long UserID, long ExamID);
+        bool Insert(Result entity);
+        bool Update(Result entity);
+    }
+
+
+    public class ResultDao: IResultDao
     {
        
         public ResultDao()
         {
             
         }
+
         public Result GetByUserExamID(long UserID, long ExamID)
         {
             return DataProvider.Ins.DB.Results.SingleOrDefault(x=>x.UserID == UserID && x.ExamID == ExamID);

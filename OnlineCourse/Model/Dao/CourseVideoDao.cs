@@ -7,7 +7,17 @@ using System.Threading.Tasks;
 
 namespace Model.Dao
 {
-    public class CourseVideoDao
+    public interface ICourseVideoDao
+    {
+        CourseVideo GetVideo(int videoId);
+        List<CourseVideo> GetListVideoInfor(int productId);
+        bool AddCourseVideo(CourseVideo courseVideo);
+        bool UpdateCourseVideo(CourseVideo entity);
+        bool DeleteCourseVideo(int courseVideoId);
+
+    }
+
+    public class CourseVideoDao: ICourseVideoDao
     {
         public CourseVideoDao() { }
 

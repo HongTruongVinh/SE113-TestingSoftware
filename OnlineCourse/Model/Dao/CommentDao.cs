@@ -9,7 +9,15 @@ using Model.ViewModel;
 
 namespace Model.Dao
 {
-    public class CommentDao
+    public interface ICommentDao
+    {
+        bool Insert(Comment entity);
+        List<Comment> ListComment(long parentId, long productId);
+        List<CommentViewModel> ListCommentViewModel(long parentId, long productId);
+
+    }
+
+    public class CommentDao: ICommentDao
     {
         
         public CommentDao()

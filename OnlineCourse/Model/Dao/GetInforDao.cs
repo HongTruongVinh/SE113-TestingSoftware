@@ -7,39 +7,22 @@ using System.Threading.Tasks;
 
 namespace Model.Dao
 {
-    public class GetInforDao
+    public interface IGetInforDao
+    {
+        HomeInfor GetHomeInfor();
+    }
+
+    public class GetInforDao: IGetInforDao
     {
         public GetInforDao() { }
 
-        //public HomeInfor GetHomeInfor()
-        //{
-        //    return new HomeInfor() { 
-        //        CountProduct = DataProvider.Ins.DB.Products.Count(), 
-        //        CountStudent = DataProvider.Ins.DB.WishProducts.Where(x => x.IsBought == true).GroupBy(x => x.UserID).Count(), //user are students
-        //        CountTeacher = DataProvider.Ins.DB.Products.GroupBy(x => x.CreateBy).Count(), //user are teachers
-        //        CountCertification = new Random().Next(DataProvider.Ins.DB.Products.Count())
-        //    };
-        //}
         public HomeInfor GetHomeInfor()
         {
-            return new HomeInfor()
-            {
-                CountProduct = 1,
-                CountStudent = 2, //user are students
-                CountTeacher = 3, //user are teachers
-                CountCertification = 4
-            };
-        }
-
-
-
-        public HomeDashboardInfor GetHomeDashboardInfor()
-        {
-            return new HomeDashboardInfor()
-            {
-                CountProduct = DataProvider.Ins.DB.Products.Count(),
-                CountLearner = DataProvider.Ins.DB.WishProducts.Where(x => x.IsBought == true).GroupBy(x => x.UserID).Count(), //user are students
-                CountUser = DataProvider.Ins.DB.Users.Count()
+            return new HomeInfor() { 
+                CountProduct = DataProvider.Ins.DB.Products.Count(), 
+                CountStudent = DataProvider.Ins.DB.User_Role.Where(x => x.idRole == 2).Count(), //user are students
+                CountTeacher = DataProvider.Ins.DB.User_Role.Where(x => x.idRole == 3).Count(), //user are teachers
+                CountCertification = new Random().Next(DataProvider.Ins.DB.Products.Count())
             };
         }
     }
@@ -51,13 +34,5 @@ namespace Model.Dao
         public int CountStudent { get; set; }
         public int CountCertification { get; set; }
         public HomeInfor() { }
-    }
-
-    public class HomeDashboardInfor
-    {
-        public int CountProduct { get; set; }
-        public int CountLearner { get; set; }
-        public int CountUser { get; set; }
-        public HomeDashboardInfor() { }
     }
 }

@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnlineCourse", "OnlineCours
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Model", "Model\Model.csproj", "{DA629763-1A6C-4C8F-B0EB-19C0FE9693B2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnlineCourse.nUnitTests", "OnlineCourse.nUnitTests\OnlineCourse.nUnitTests.csproj", "{38BDB8E0-755F-4C41-A173-0D32FAF52691}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTest_Controller", "UnitTestProject1\UnitTest_Controller.csproj", "{ADCBD87B-EC2F-4B2D-A698-3390C217F7A8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +23,10 @@ Global
 		{DA629763-1A6C-4C8F-B0EB-19C0FE9693B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DA629763-1A6C-4C8F-B0EB-19C0FE9693B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DA629763-1A6C-4C8F-B0EB-19C0FE9693B2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{38BDB8E0-755F-4C41-A173-0D32FAF52691}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{38BDB8E0-755F-4C41-A173-0D32FAF52691}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{38BDB8E0-755F-4C41-A173-0D32FAF52691}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{38BDB8E0-755F-4C41-A173-0D32FAF52691}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ADCBD87B-EC2F-4B2D-A698-3390C217F7A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ADCBD87B-EC2F-4B2D-A698-3390C217F7A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ADCBD87B-EC2F-4B2D-A698-3390C217F7A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ADCBD87B-EC2F-4B2D-A698-3390C217F7A8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

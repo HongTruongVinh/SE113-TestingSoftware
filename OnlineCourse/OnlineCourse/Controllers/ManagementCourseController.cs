@@ -1,12 +1,14 @@
 ﻿using Microsoft.Ajax.Utilities;
 using Model.Dao;
 using Model.Models;
+using OnlineCourse.Common;
 using OnlineCourse.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
@@ -18,17 +20,34 @@ namespace OnlineCourse.Controllers
 {
     public class ManagementCourseController : Controller
     {
+        public IUserLoginManager _userLoginManager { get; set; }
+        public IProductDao _productDao { get; set; }
+        public ICourseVideoDao _courseVideoDao { get; set; }
+        public ICourseDocumentDao _courseDocumentDao { get; set; }
+        public IProductCategoryDao _productCategoryDao { get; set; }
+        public IManagementCourseDao _managementCourseDao { get; set; }
+        public IFileManager _fileManager { get; set; }
+
+        public ManagementCourseController()
+        {
+            _userLoginManager = new UserLoginManager(this);
+            _productDao = new ProductDao();
+            _productCategoryDao = new ProductCategoryDao();
+            _managementCourseDao = new ManagementCourseDao();
+            _courseVideoDao = new CourseVideoDao();
+            _courseDocumentDao = new CourseDocumentDao();
+            _fileManager = new FileManager(this);
+
+            MyProducts = new List<Product>();
+        }
+
         // GET: ManagementCourse
 
         List<Product> MyProducts;
 
         public ActionResult Index()
         {
-            var user = (OnlineCourse.Common.UserLogin)Session[OnlineCourse.Common.CommonConstants.USER_SESSION];
-            if (user == null)
-            {
-                return new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Home", action = "Index" }));
-            }
+            var user = _userLoginManager.GetUserLogin();
 
             GetListProductOfUser((int)user.UserID);
             ViewBag.MyProducts = ConvertToProductModels(MyProducts);
@@ -38,14 +57,10 @@ namespace OnlineCourse.Controllers
 
         public ActionResult ManagementCourseDetail(long productId)
         {
-            ViewBag.ListDocument = new CourseDocumentDao().GetListDocumentInfor((int)productId);
-            ViewBag.ListVideo = new CourseVideoDao().GetListVideoInfor((int)productId);
+            ViewBag.ListDocument = _courseDocumentDao.GetListDocumentInfor((int)productId);
+            ViewBag.ListVideo = _courseVideoDao.GetListVideoInfor((int)productId);
 
-            var user = (OnlineCourse.Common.UserLogin)Session[OnlineCourse.Common.CommonConstants.USER_SESSION];
-            if (user == null)
-            {
-                return new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Home", action = "Index" }));
-            }
+            var user = _userLoginManager.GetUserLogin();
 
             GetListProductOfUser((int)user.UserID);
 
@@ -58,33 +73,25 @@ namespace OnlineCourse.Controllers
 
         public ActionResult ViewEditCourse(long productId)
         {
-            var user = (OnlineCourse.Common.UserLogin)Session[OnlineCourse.Common.CommonConstants.USER_SESSION];
-            if (user == null)
-            {
-                return new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Home", action = "Index" }));
-            }
+            var user = _userLoginManager.GetUserLogin();
 
-            ViewBag.ListCategories = new ProductCategoryDao().ListAll();
+            ViewBag.ListCategories = _productCategoryDao.ListAll();
 
             if (productId == -1)
             {
                 return View(new Product());
             }
 
-            var model = new ProductDao().ViewDetail(productId);
+            var model = _productDao.ViewDetail(productId);
 
             return View(model);
         }
 
         public ActionResult ViewAddVieoToCourse(long productId)
         {
-            var user = (OnlineCourse.Common.UserLogin)Session[OnlineCourse.Common.CommonConstants.USER_SESSION];
-            if (user == null)
-            {
-                return new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Home", action = "Index" }));
-            }
+            var user = _userLoginManager.GetUserLogin();
 
-            var product = new ProductDao().ViewDetail(productId);
+            var product = _productDao.ViewDetail(productId);
 
             var model = new CourseVideo();
 
@@ -96,19 +103,15 @@ namespace OnlineCourse.Controllers
         [System.Web.Http.HttpPost]
         public ActionResult AddVieoToCourse(CourseVideo video, HttpPostedFileBase file)
         {
-            var user = (OnlineCourse.Common.UserLogin)Session[OnlineCourse.Common.CommonConstants.USER_SESSION];
-            if (user == null)
-            {
-                return new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Home", action = "Index" }));
-            }
+            var user = _userLoginManager.GetUserLogin();
 
-            if(file != null && video.Title != null)
+            if (file != null && video.Title != null)
             {
                 video.Name = file.FileName;
                 video.DateUpdate = DateTime.Now;
-                video.Link = UploadVideo(file);
+                video.Link = _fileManager.UploadVideo(file);
 
-                var result = new CourseVideoDao().AddCourseVideo(video);
+                var result = _courseVideoDao.AddCourseVideo(video);
             }
 
             return RedirectToAction("ManagementCourseDetail", new { productId = video.productID });
@@ -117,13 +120,9 @@ namespace OnlineCourse.Controllers
 
         public ActionResult ViewAddDocumentToCourse(long productId)
         {
-            var user = (OnlineCourse.Common.UserLogin)Session[OnlineCourse.Common.CommonConstants.USER_SESSION];
-            if (user == null)
-            {
-                return new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Home", action = "Index" }));
-            }
+            var user = _userLoginManager.GetUserLogin();
 
-            var product = new ProductDao().ViewDetail(productId);
+            var product = _productDao.ViewDetail(productId);
 
             var model = new CourseDocument();
 
@@ -135,18 +134,14 @@ namespace OnlineCourse.Controllers
         [System.Web.Http.HttpPost]
         public ActionResult AddDocumentToCourse(CourseDocument document, HttpPostedFileBase file)
         {
-            var user = (OnlineCourse.Common.UserLogin)Session[OnlineCourse.Common.CommonConstants.USER_SESSION];
-            if (user == null)
-            {
-                return new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Home", action = "Index" }));
-            }
+            var user = _userLoginManager.GetUserLogin();
 
             if (document.Title != null && file != null)
             {
                 document.Name = file.FileName;
                 document.DateUpdate = DateTime.Now;
-                document.Link = UploadDocument(file);
-                var result = new CourseDocumentDao().AddCourseDocument(document);
+                document.Link = _fileManager.UploadDocument(file);
+                var result = _courseDocumentDao.AddCourseDocument(document);
             }
 
             return RedirectToAction("ManagementCourseDetail", new { productId = document.productID });
@@ -154,58 +149,41 @@ namespace OnlineCourse.Controllers
 
         public ActionResult DeleteDocumentOfCourse(int documentId, int productId)
         {
-            var user = (OnlineCourse.Common.UserLogin)Session[OnlineCourse.Common.CommonConstants.USER_SESSION];
-            if (user == null)
-            {
-                return new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Home", action = "Index" }));
-            }
+            var user = _userLoginManager.GetUserLogin();
 
-            var result = new CourseDocumentDao().DeleteCourseDocument(documentId);
+            var result = _courseDocumentDao.DeleteCourseDocument(documentId);
 
             return RedirectToAction("ManagementCourseDetail", new { productId = productId });
         }
 
         public ActionResult DeleteVideoOfCourse(int videoId, int productId)
         {
-            var user = (OnlineCourse.Common.UserLogin)Session[OnlineCourse.Common.CommonConstants.USER_SESSION];
-            if (user == null)
-            {
-                return new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Home", action = "Index" }));
-            }
+            var user = _userLoginManager.GetUserLogin();
 
-            var result = new CourseVideoDao().DeleteCourseVideo(videoId);
+            var result = _courseVideoDao.DeleteCourseVideo(videoId);
 
             return RedirectToAction("ManagementCourseDetail", new { productId = productId });
         }
-        //public ActionResult AddCourse(Product product)
-        //{
+        public ActionResult AddCourse(Product product)
+        {
+            var user = _userLoginManager.GetUserLogin();
 
-        //    var user = (OnlineCourse.Common.UserLogin)Session[OnlineCourse.Common.CommonConstants.USER_SESSION];
-        //    if (user == null)
-        //    {
-        //        return new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Home", action = "Index" }));
-        //    }
+            long id = _productDao.Insert(product);
 
-        //    long id = new ProductDao().Insert(product);
-
-        //    return View(id);
-        //}
+            return View(id);
+        }
 
         [System.Web.Http.HttpPost]
         public ActionResult UpdateCourse(Product product, HttpPostedFileBase imageFile)
         {
-            var user = (OnlineCourse.Common.UserLogin)Session[OnlineCourse.Common.CommonConstants.USER_SESSION];
-            if (user == null)
-            {
-                return new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Home", action = "Index" }));
-            }
+            var user = _userLoginManager.GetUserLogin();
 
             product.ModifiDate = DateTime.Now;
 
 
             if(imageFile != null)
             {
-                string path = UploadImage(imageFile);
+                string path = _fileManager.UploadImage(imageFile);
 
                 if (!path.Equals("-1"))
                 {
@@ -217,7 +195,7 @@ namespace OnlineCourse.Controllers
 
             if (product.ID != 0)
             {
-                Product _product = new ProductDao().ViewDetail(product.ID);
+                Product _product = _productDao.ViewDetail(product.ID);
                 _product.ModifiDate = DateTime.Now;
                 _product.Name = product.Name;
                 _product.Description = product.Description;
@@ -229,7 +207,7 @@ namespace OnlineCourse.Controllers
                     _product.Image = product.Image;
                 }
 
-                result = new ProductDao().Update(_product);
+                result = _productDao.Update(_product);
             }
             else
             {
@@ -245,12 +223,12 @@ namespace OnlineCourse.Controllers
                 }
 
 
-                long _id = new ProductDao().Insert(product);
+                long _id = _productDao.Insert(product);
 
-                var _product = new ProductDao().ViewDetail(_id);
+                var _product = _productDao.ViewDetail(_id);
                 _product.MetaTitle = _product.ID.ToString();
 
-                result = new ProductDao().Update(_product);
+                result = _productDao.Update(_product);
 
             }
 
@@ -267,14 +245,9 @@ namespace OnlineCourse.Controllers
 
         public ActionResult DeleteCourse(int productId)
         {
+            var user = _userLoginManager.GetUserLogin();
 
-            var user = (OnlineCourse.Common.UserLogin)Session[OnlineCourse.Common.CommonConstants.USER_SESSION];
-            if (user == null)
-            {
-                return new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Home", action = "Index" }));
-            }
-
-            bool result = new ProductDao().Delete(productId);
+            bool result = _productDao.Delete(productId);
 
             if (result == true)
             {
@@ -286,10 +259,9 @@ namespace OnlineCourse.Controllers
             }
         }
 
-
         void GetListProductOfUser(int userId)
         {
-            MyProducts = new ManagementCourseDao().GetProductOfUser(userId);
+            MyProducts = _managementCourseDao.GetProductOfUser(userId);
         }
 
         List<ProductModel> ConvertToProductModels(List<Product> products)
@@ -310,13 +282,13 @@ namespace OnlineCourse.Controllers
                 model.MetaTitle = product.MetaTitle;
 
                 int createrID = (int)Convert.ToDouble(product.CreateBy);
-                model.CreateBy = new ProductDao().GetCreatedByUser(createrID).Name;
+                model.CreateBy = _productDao.GetCreatedByUser(createrID).Name;
 
                 model.CountVideo = product.ListFile.Split('*').Length;
 
-                model.CountComment = new ProductDao().GetCountComment(product.ID);
+                model.CountComment = _productDao.GetCountComment(product.ID);
 
-                model.CountLearner = new ProductDao().GetCountLearner(product.ID);
+                model.CountLearner = _productDao.GetCountLearner(product.ID);
 
                 productModels.Add(model);
             }
@@ -324,115 +296,5 @@ namespace OnlineCourse.Controllers
             return productModels;
         }
 
-        public string UploadImage(HttpPostedFileBase file)
-        {
-            Random r = new Random();
-            string path = "-1";
-            int random = r.Next();
-
-            if (file != null && file.ContentLength > 0)
-            {
-                string extension = Path.GetExtension(file.FileName);
-                if (extension.ToLower().Equals(".jpg") || extension.ToLower().Equals(".img") || extension.ToLower().Equals(".png"))
-                {
-                    try
-                    {
-                        path = Path.Combine(Server.MapPath("~/assets/client/images/courses"), random + Path.GetFileName(file.FileName));
-                        file.SaveAs(path);
-                        path = "/assets/client/images/courses/" + random + Path.GetFileName(file.FileName);
-
-                    }
-                    catch
-                    {
-                        path = "-1";
-                    }
-                }
-                else
-                {
-                    Response.Write("<script>alert('Only jpg, png or img formats are acceptable....'); </script>");
-                }
-            }
-            else
-            {
-                Response.Write("<script>alert('Please select a file'); </script>");
-                path = "-1";
-            }
-
-            return path;
-        }
-
-        public string UploadDocument(HttpPostedFileBase file)
-        {
-            Random r = new Random();
-            string path = "-1";
-            int random = r.Next();
-
-            if (file != null && file.ContentLength > 0)
-            {
-                string extension = Path.GetExtension(file.FileName);
-                if (extension.ToLower().Equals(".txt") || extension.ToLower().Equals(".pdf") || extension.ToLower().Equals(".docx") || extension.ToLower().Equals(".zip"))
-                {
-                    try
-                    {
-                        path = Path.Combine(Server.MapPath("~/assets/client/documents"), random + Path.GetFileName(file.FileName));
-                        file.SaveAs(path);
-                        path = "/assets/client/documents/" + random + Path.GetFileName(file.FileName);
-
-                    }
-                    catch
-                    {
-                        path = "-1";
-                    }
-                }
-                else
-                {
-                    Response.Write("<script>alert('Only pdf, txt, doc or zip formats are acceptable....'); </script>");
-                }
-            }
-            else
-            {
-                Response.Write("<script>alert('Please select a file'); </script>");
-                path = "-1";
-            }
-
-            return path;
-        }
-
-        public string UploadVideo(HttpPostedFileBase file)
-        {
-            Random r = new Random();
-            string path = "-1";
-            int random = r.Next();
-
-            if (file != null && file.ContentLength > 0)
-            {
-                string extension = Path.GetExtension(file.FileName);
-                if (extension.ToLower().Equals(".mp4"))
-                {
-                    try
-                    {
-                        path = Path.Combine(Server.MapPath("~/assets/client/videos"), random + Path.GetFileName(file.FileName));
-                        file.SaveAs(path);
-                        path = "/assets/client/videos/" + random + Path.GetFileName(file.FileName);
-
-                    }
-                    catch
-                    {
-                        path = "-1";
-                    }
-                }
-                else
-                {
-                    Response.Write("<script>alert('Only mp4 formats are acceptable....'); </script>");
-                }
-            }
-            else
-            {
-                Response.Write("<script>alert('Please select a file'); </script>");
-                path = "-1";
-            }
-
-            return path;
-        }
     }
 }

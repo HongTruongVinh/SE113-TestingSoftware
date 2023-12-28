@@ -10,92 +10,78 @@ namespace OnlineCourse.Areas.Admin.Controllers
 {
     public class QuestionController : BaseController
     {
-        //
-        // GET: /Admin/Question/
+        public IQuestionDao _questionDao {  get; set; }
+        public IProductDao _productDao { get; set; }
 
+        public QuestionController() 
+        {
+            _questionDao = new QuestionDao();
+            _productDao = new ProductDao();
+        }
+
+        // GET: /Admin/Question/
         public ActionResult Index(string searchString, int page = 1, int pageSize = 200)
         {
-            var dao = new QuestionDao();
-            var model = dao.ListAllPaging(searchString, page, pageSize);
+            var model = _questionDao.ListAllPaging(searchString, page, pageSize);
             ViewBag.SearchString = searchString;
             SetViewBag();
             return View(model);
         }
+
         public void SetViewBag(long? selectedId = null)
         {
-            var dao = new ProductDao();
-            ViewBag.ProductList = dao.ListAllProduct();
+            ViewBag.ProductList = _productDao.ListAllProduct();
         }
+
         [HttpDelete]
         public ActionResult Delete(int id)
         {
-            new QuestionDao().Delete(id);
+            _questionDao.Delete(id);
             return RedirectToAction("Index");
         }
+
         [HttpPost]
         public JsonResult AddQuestionAjax(string name, string content, string answer, string productid)
         {
-            try
+            Question question = new Question();
+
+            question.Name = name;
+            question.Content = content;
+            question.Answer = answer;
+            question.ProductID = Convert.ToInt16(productid);
+            question.Type = "1";
+            question.Status = true;
+
+            long id = _questionDao.Insert(question);
+            if (id > 0)
             {
-                var dao = new QuestionDao();
-                Question question = new Question();
-
-
-                question.Name = name;
-                question.Content = content;
-                question.Answer = answer;
-                question.ProductID = Convert.ToInt16(productid);
-                question.Type = "1";              
-                question.Status = true;
-
-                long id = dao.Insert(question);
-                if (id > 0)
-                {
-                    return Json(new { status = true });
-                }
-                else
-                {
-                    return Json(new { status = false });
-                }
+                return Json(new { status = true });
             }
-            catch
+            else
             {
-                return Json(new
-                {
-                    status = false
-                });
+                return Json(new { status = false });
             }
         }
-        [HttpPost]
-        public JsonResult UpdateQuestionAjax(string id,string name, string content, string answer, string productid)
-        {
-            try
-            {
-                var dao = new QuestionDao();
-                Question question = new Question();
-                question = dao.ViewDetail(Convert.ToInt16(id));
-                question.Name = name;
-                question.Content = content;
-                question.Answer = answer;
-                question.ProductID = Convert.ToInt16(productid);               
-                question.Status = true;
 
-                bool editquestion = dao.Update(question);
-                if (editquestion == true)
-                {
-                    return Json(new { status = true });
-                }
-                else
-                {
-                    return Json(new { status = false });
-                }
-            }
-            catch
+        [HttpPost]
+        public JsonResult UpdateQuestionAjax(string id, string name, string content, string answer, string productid)
+        {
+            Question question = new Question();
+            question = _questionDao.ViewDetail(Convert.ToInt16(id));
+            question.Name = name;
+            question.Content = content;
+            question.Answer = answer;
+            question.ProductID = Convert.ToInt16(productid);
+            question.Status = true;
+
+            bool editquestion = _questionDao.Update(question);
+            if (editquestion == true)
             {
-                return Json(new
-                {
-                    status = false
-                });
+                return Json(new { status = true });
+            }
+            else
+            {
+                return Json(new { status = false });
             }
         }
 

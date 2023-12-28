@@ -1,4 +1,5 @@
-﻿using Model.Dao;
+﻿using Microsoft.AspNetCore.Http;
+using Model.Dao;
 using Model.Models;
 using OnlineCourse.Common;
 using OnlineCourse.Models;
@@ -17,35 +18,49 @@ namespace OnlineCourse.Controllers
 {
     public class UserController : Controller
     {
-        //
-        // GET: /User/
+        public bool isUnitTest = false;
+        public IGetInforDao _getInforDao;
+        public IUserDao _userDao {  get; set; }
+        public IUserLoginManager _userLoginManager { get; set; }
+        public IProductDao _productDao { get; set; }
+
+        public UserController()
+        {
+            _userDao = new UserDao();
+            _userLoginManager = new UserLoginManager(this);
+            _productDao = new ProductDao();
+            _getInforDao = new GetInforDao();
+        }
 
         public ActionResult Login()
         {
-            HomeInfor homeInfor = new GetInforDao().GetHomeInfor();
+            HomeInfor homeInfor = _getInforDao.GetHomeInfor();
             ViewBag.countLearner = homeInfor.CountStudent;
+            
             return View();
         }
+
         [System.Web.Mvc.HttpPost]
         public ActionResult Login(LoginModel model)
         {
+
             if (ModelState.IsValid)
             {
-                var dao = new UserDao();
-                var result = dao.Login(model.UserName, Encryptor.MD5Hash(model.Password), true);
+                string hashPassword = Encryptor.MD5Hash(model.Password);
+                var result = _userDao.Login(model.UserName, hashPassword, false);
 
                 if (result == 1)
                 {
-                    var user = dao.GetByUserName(model.UserName);
+                    var user = _userDao.GetByUserName(model.UserName);
                     var usersession = SetUserSession(user);
                     usersession.Address = user.Address;
-                    //usersession.WishListIdProduct = new ProductDao().GetWishListProduct((int)user.ID); // comment for unit test
-                    Session.Add(CommonConstants.USER_SESSION, usersession);
+                    usersession.WishListIdProduct = _productDao.GetWishListProduct((int)user.ID);
+                    _userLoginManager.AddUserLogin(usersession);
                     return RedirectToAction("Index", "Home");
                 }
                 else if (result == 0)
                 {
-                    ModelState.AddModelError("", "Tài khoản không tồn tại");
+                    ModelState.AddModelError("", "Tài khoản không tồn tai");
                 }
                 else if (result == -1)
                 {
@@ -67,9 +82,9 @@ namespace OnlineCourse.Controllers
 
         public ActionResult LogUot()
         {
-            Session.Remove(CommonConstants.USER_SESSION);
+            _userLoginManager.RemoveUserLogin();
 
-            FormsAuthentication.SignOut();
+            if(isUnitTest == false)FormsAuthentication.SignOut();
 
             return new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Home", action = "Index"}));
         }
@@ -77,11 +92,8 @@ namespace OnlineCourse.Controllers
 
         public ActionResult ProfileUser()
         {
-            var user = (OnlineCourse.Common.UserLogin)Session[OnlineCourse.Common.CommonConstants.USER_SESSION];
-            if (user == null)
-            {
-                return new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Home", action = "Index" }));
-            }
+            var user = _userLoginManager.GetUserLogin();
+
 
             //ViewBag.ListResultExam = new ResultDao().GetListResultExamOfUser(user.UserID);
 
@@ -112,7 +124,7 @@ namespace OnlineCourse.Controllers
             usersession.Role = "Học viên";
             usersession.Phone = user.Phone;
             usersession.Address = user.Address;
-            usersession.WishListIdProduct = new ProductDao().GetWishListProduct((int)user.ID);
+            usersession.WishListIdProduct = _productDao.GetWishListProduct((int)user.ID);
             return usersession;
         }
     }

@@ -8,7 +8,20 @@ using PagedList;
 
 namespace Model.Dao
 {
-    public class ExamDao
+    public interface IExamDao
+    {
+        List<Exam> ListExamOfUser(int userId);
+        List<Exam> ListAllExam();
+        List<Exam> ListByType(string searchString, string Type);
+        Exam ViewDetail(int id);
+        IEnumerable<Exam> ListAllPaging(string searchString, int page, int pagesize);
+
+        long Insert(Exam entity);
+        bool Update(Exam entity);
+        bool Delete(int id);
+    }
+
+    public class ExamDao: IExamDao
     {
         
         public ExamDao()

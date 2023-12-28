@@ -7,7 +7,15 @@ using System.Threading.Tasks;
 
 namespace Model.Dao
 {
-    public class CourseDocumentDao
+    public interface ICourseDocumentDao
+    {
+        List<CourseDocument> GetListDocumentInfor(int productId);
+        bool AddCourseDocument(CourseDocument courseDocument);
+        bool UpdateCourseDocument(CourseDocument entity);
+        bool DeleteCourseDocument(int courseDocumentId);
+    }
+
+    public class CourseDocumentDao: ICourseDocumentDao
     {
         public CourseDocumentDao() { }
 
