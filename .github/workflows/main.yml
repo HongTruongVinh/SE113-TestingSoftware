@@ -1,0 +1,31 @@
+name: CI and dev
+
+on: 
+  push:
+    branches: 
+      - main 
+
+  pull_request:
+    branches: 
+      - main 
+
+jobs:
+  build:
+    runs-on: window-latest
+    
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Setup .NET 4.8
+        uses: actions/setup-dotnet@v1
+        with: 
+          dotnet-version: '4.8'
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build app
+        run: dotnet build -c Release --no-restore
+
+       
