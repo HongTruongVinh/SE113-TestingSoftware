@@ -143,6 +143,12 @@ namespace UnitTestProject1
             ViewResult v = ctrl.Exam() as ViewResult;
 
             Assert.AreEqual<string>("", v.ViewName);
+
+            var actual = (List<ProductModel>)v.ViewData["ListOwnProducts"];
+
+            Assert.IsNotNull((List<ProductModel>)v.ViewData["ListOwnProducts"]);
+
+            Assert.IsTrue(ctrl.isBoughtProduct);
         }
 
         [TestMethod]
@@ -153,6 +159,7 @@ namespace UnitTestProject1
             ViewResult v = ctrl.CourseBought() as ViewResult;
 
             Assert.AreEqual<string>("", v.ViewName);
+            Assert.IsTrue(ctrl.isBoughtProduct);
         }
 
         [TestMethod]
@@ -195,6 +202,35 @@ namespace UnitTestProject1
             _userDao.Setup(x => x.ViewDetail(It.IsAny<int>())).Returns(user);
             _userDao.Setup(x => x.Update(user)).Returns(false);
             _fileManager.Setup(x => x.UploadImage(files[0])).Returns("-1");
+
+            JsonResult jsonResult = ctrl.UpdateProfile(userLogin, files[0]) as JsonResult;
+
+            var respone = jsonResult.Data.ToString();
+
+            Assert.AreEqual<string>("{ status = False }", respone);
+        }
+
+        [TestMethod]
+        public void UpdateProfile_NoneAvatarUser()
+        {
+            // arrange
+            var httpContextMock = new Mock<HttpContextBase>();
+            var serverMock = new Mock<HttpServerUtilityBase>();
+            serverMock.Setup(x => x.MapPath("~/app_data")).Returns(@"c:\work\app_data");
+            httpContextMock.Setup(x => x.Server).Returns(serverMock.Object);
+
+            var file1Mock = new Mock<HttpPostedFileBase>();
+            file1Mock.Setup(x => x.FileName).Returns("file1.pdf");
+            var file2Mock = new Mock<HttpPostedFileBase>();
+            file2Mock.Setup(x => x.FileName).Returns("file2.doc");
+            var files = new[] { file1Mock.Object, file2Mock.Object };
+
+            user.LinkImage = null;
+            _userDao.Setup(x => x.ViewDetail(It.IsAny<int>())).Returns(user);
+            _userDao.Setup(x => x.Update(user)).Returns(false);
+            _fileManager.Setup(x => x.UploadImage(files[0])).Returns("-1");
+
+            userLogin.Image = null;
 
             JsonResult jsonResult = ctrl.UpdateProfile(userLogin, files[0]) as JsonResult;
 
@@ -302,5 +338,21 @@ namespace UnitTestProject1
 
             Assert.AreEqual<string>("{ status = False }", respone);
         }
+
+        [TestMethod]
+        public void Constructer_Test()
+        {
+            ctrl = new ProfileController();
+            Assert.IsNotNull(ctrl._productDao);
+            Assert.IsNotNull(ctrl._userDao);
+            Assert.IsNotNull(ctrl._userLoginManager);
+            Assert.IsNotNull(ctrl._examDao);
+            Assert.IsNotNull(ctrl._resultDao);
+            Assert.IsNotNull(ctrl._wishProductDao);
+            Assert.IsNotNull(ctrl._fileManager);
+
+        }
+
+
     }
 }

@@ -66,6 +66,7 @@ namespace OnlineCourse.Controllers
             return View(user);
         }
 
+        public bool isBoughtProduct {  get; set; }
         public ActionResult Exam()
         {
             //var user = (OnlineCourse.Common.UserLogin)Session[OnlineCourse.Common.CommonConstants.USER_SESSION];
@@ -75,8 +76,8 @@ namespace OnlineCourse.Controllers
             //}
 
             var user = _userLoginManager.GetUserLogin();
-
-            ViewBag.ListOwnProducts = ConvertToProductModels(_wishProductDao.GetListWishProduct(user.UserID), true);
+            isBoughtProduct = true;
+            ViewBag.ListOwnProducts = ConvertToProductModels(_wishProductDao.GetListWishProduct(user.UserID), isBoughtProduct);
 
             ViewBag.Exams = (List<Model.Models.Exam>)_examDao.ListExamOfUser((int)user.UserID);
 
@@ -93,7 +94,9 @@ namespace OnlineCourse.Controllers
 
             var user = _userLoginManager.GetUserLogin();
 
-            ViewBag.ListOwnProducts = ConvertToProductModels(_wishProductDao.GetListWishProduct(user.UserID), true);
+            isBoughtProduct = true;
+
+            ViewBag.ListOwnProducts = ConvertToProductModels(_wishProductDao.GetListWishProduct(user.UserID), isBoughtProduct);
 
             return View(user);
         }
@@ -106,9 +109,11 @@ namespace OnlineCourse.Controllers
             //    return new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Home", action = "Index" }));
             //}
 
-            var user = _userLoginManager.GetUserLogin();
+            var user = _userLoginManager.GetUserLogin(); 
 
-            ViewBag.CartProducts = ConvertToProductModels(_wishProductDao.GetListCartProduct(user.UserID), false);
+            isBoughtProduct = false;
+
+            ViewBag.CartProducts = ConvertToProductModels(_wishProductDao.GetListCartProduct(user.UserID), isBoughtProduct);
 
             return View(user);
         }

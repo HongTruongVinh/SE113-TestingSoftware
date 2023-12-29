@@ -195,8 +195,6 @@ C:\DoAn1\OnlineCourse\OnlineCourse\obj\Debug\OnlineCourse.csproj.CopyComplete
 C:\DoAn1\OnlineCourse\OnlineCourse\obj\Debug\OnlineCourse.dll
 C:\DoAn1\OnlineCourse\OnlineCourse\obj\Debug\OnlineCourse.pdb
 C:\DoAn1\UnitTestVersion\OnlineCourse\OnlineCourse\bin\OnlineCourse.dll.config
-C:\DoAn1\UnitTestVersion\OnlineCourse\OnlineCourse\bin\OnlineCourse.dll
-C:\DoAn1\UnitTestVersion\OnlineCourse\OnlineCourse\bin\OnlineCourse.pdb
 C:\DoAn1\UnitTestVersion\OnlineCourse\OnlineCourse\bin\roslyn\csc.exe
 C:\DoAn1\UnitTestVersion\OnlineCourse\OnlineCourse\bin\roslyn\csc.exe.config
 C:\DoAn1\UnitTestVersion\OnlineCourse\OnlineCourse\bin\roslyn\csc.rsp
@@ -225,6 +223,9 @@ C:\DoAn1\UnitTestVersion\OnlineCourse\OnlineCourse\bin\roslyn\vbc.exe.config
 C:\DoAn1\UnitTestVersion\OnlineCourse\OnlineCourse\bin\roslyn\vbc.rsp
 C:\DoAn1\UnitTestVersion\OnlineCourse\OnlineCourse\bin\roslyn\VBCSCompiler.exe
 C:\DoAn1\UnitTestVersion\OnlineCourse\OnlineCourse\bin\roslyn\VBCSCompiler.exe.config
+C:\DoAn1\UnitTestVersion\OnlineCourse\OnlineCourse\obj\Debug\OnlineCourse.csproj.CopyComplete
+C:\DoAn1\UnitTestVersion\OnlineCourse\OnlineCourse\bin\OnlineCourse.dll
+C:\DoAn1\UnitTestVersion\OnlineCourse\OnlineCourse\bin\OnlineCourse.pdb
 C:\DoAn1\UnitTestVersion\OnlineCourse\OnlineCourse\bin\Microsoft.AspNetCore.Http.Abstractions.dll
 C:\DoAn1\UnitTestVersion\OnlineCourse\OnlineCourse\bin\Microsoft.AspNetCore.Http.Features.dll
 C:\DoAn1\UnitTestVersion\OnlineCourse\OnlineCourse\bin\Microsoft.AspNetCore.Mvc.Abstractions.dll
@@ -247,6 +248,5 @@ C:\DoAn1\UnitTestVersion\OnlineCourse\OnlineCourse\bin\Microsoft.Net.Http.Header
 C:\DoAn1\UnitTestVersion\OnlineCourse\OnlineCourse\bin\System.Text.Encodings.Web.xml
 C:\DoAn1\UnitTestVersion\OnlineCourse\OnlineCourse\obj\Debug\OnlineCourse.csproj.AssemblyReference.cache
 C:\DoAn1\UnitTestVersion\OnlineCourse\OnlineCourse\obj\Debug\OnlineCourse.csproj.CoreCompileInputs.cache
-C:\DoAn1\UnitTestVersion\OnlineCourse\OnlineCourse\obj\Debug\OnlineCourse.csproj.CopyComplete
 C:\DoAn1\UnitTestVersion\OnlineCourse\OnlineCourse\obj\Debug\OnlineCourse.dll
 C:\DoAn1\UnitTestVersion\OnlineCourse\OnlineCourse\obj\Debug\OnlineCourse.pdb

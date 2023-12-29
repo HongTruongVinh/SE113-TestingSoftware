@@ -77,7 +77,8 @@ namespace OnlineCourse.Controllers
 
 
             }
-            return View("model");
+            //return View("model");//code gốc 
+            return View(model);
         }
 
         public ActionResult LogUot()
@@ -104,7 +105,7 @@ namespace OnlineCourse.Controllers
             return View(user);
         }
 
-        UserLogin SetUserSession(User user)
+        public UserLogin SetUserSession(User user)
         {
             var usersession = new UserLogin();
             usersession.UserID = user.ID;
@@ -127,5 +128,6 @@ namespace OnlineCourse.Controllers
             usersession.WishListIdProduct = _productDao.GetWishListProduct((int)user.ID);
             return usersession;
         }
+
     }
 }

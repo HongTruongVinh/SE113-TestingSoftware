@@ -9,6 +9,7 @@ using Model.Dao;
 using Model.Models;
 using System.Linq;
 using System.Collections.Generic;
+using System.Runtime.ConstrainedExecution;
 
 namespace UnitTestProject1
 {
@@ -64,6 +65,7 @@ namespace UnitTestProject1
             ViewResult v = ctrl.Login() as ViewResult;
 
             Assert.AreEqual<string>("", v.ViewName);
+
         }
 
         [TestMethod]
@@ -73,9 +75,11 @@ namespace UnitTestProject1
 
             userDao.Setup(x => x.Login(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>())).Returns(1);
 
-            ViewResult v = ctrl.Login(loginModel) as ViewResult;
+            RedirectToRouteResult result = ctrl.Login(loginModel) as RedirectToRouteResult;
 
-            Assert.AreEqual<object>(null, v);
+            Assert.AreEqual<string>("", result.RouteName);
+            Assert.IsTrue(result.RouteValues.ContainsValue("Index"));
+            Assert.IsTrue(result.RouteValues.ContainsValue("Home"));
         }
 
         [TestMethod]
@@ -161,10 +165,44 @@ namespace UnitTestProject1
         [TestMethod]
         public void LogOut()
         {
-            ViewResult v = ctrl.LogUot() as ViewResult;
+            RedirectToRouteResult result = ctrl.LogUot() as RedirectToRouteResult;
 
-            Assert.AreEqual<object>(null, v);
+            Assert.IsTrue(result.RouteValues.ContainsValue("Index"));
+            Assert.IsTrue(result.RouteValues.ContainsValue("Home"));
         }
+
+        [TestMethod]
+        public void SetUserSession_NoAvatarUser()
+        {
+            user.LinkImage = null;
+            var result = ctrl.SetUserSession(user);
+
+            Assert.AreEqual<string>("/assets/client/images/avatar/00.jpg", result.Image);
+            Assert.AreEqual<string>("Học viên", result.Role);
+        }
+
+        [TestMethod]
+        public void SetUserSession_AvatarUser()
+        {
+            user.LinkImage = "userAvatarLink.jpg";
+            var result = ctrl.SetUserSession(user);
+
+            Assert.AreEqual<string>("userAvatarLink.jpg", result.Image);
+            Assert.AreEqual<string>("Học viên", result.Role);
+        }
+
+        [TestMethod]
+        public void Constructer_Test()
+        {
+            ctrl = new UserController();
+            Assert.IsNotNull(ctrl._productDao);
+            Assert.IsNotNull(ctrl._userDao);
+            Assert.IsNotNull(ctrl._userLoginManager);
+            Assert.IsNotNull(ctrl._getInforDao);
+
+            Assert.IsFalse(ctrl.isUnitTest);
+        }
+
 
     }
 }
